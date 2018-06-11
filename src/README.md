@@ -1,6 +1,7 @@
 # README
 
 ## 依赖
+Python 3.6
 ``` Shell
 pip3 install websockets colorama
 ```
