@@ -1,4 +1,9 @@
-# 公用的基础代码
+# README
+
+## 依赖
+``` Shell
+pip3 install websockets colorama
+```
 
 ## SafeProcess.py
 
