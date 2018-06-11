@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebSocket demo</title>
+        <link rel="stylesheet" href="materialize/css/materialize.min.css" media="screen,projection" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style>
+        .header {
+            color: #ee6e73;
+            font-weight: 300;
+        }
+
+        </style>
+        <script src="jquery-3.3.1.min.js"></script>
+    </head>
+    <body>
+        <script src="materialize/js/materialize.min.js"></script>
+        <h3 class="header">Interactions</h3>
+        <div class="collection" id="interactions">
+        </div>
+
+        <script>
+            var wsOut = new WebSocket("ws://127.0.0.1:8000/"),
+                wsIn = new WebSocket("ws://127.0.0.1:8001/"),
+                messages = document.createElement('ul');
+            wsIn.onmessage = function (event) {
+                var content = document.createTextNode(event.data);
+                console.log(event.data)
+            };
+
+            $(document).ready(function () {
+                interactions = [
+                    "Happy", "Sad", "Grumpy", "Sleepy", "MemoryGame", "ReactionGame"
+                ]
+
+                for (var i=0; i<interactions.length; i++) {
+                    $("#interactions").append("<a href=\"#!\" class=\"collection-item\" id=\"interaction-" + i + "\" value=\"" + i + "\">#" + i + ": " + interactions[i] + "</a>")
+
+                    $("#interaction-" + i).click(function (e) {
+                        wsOut.send(JSON.stringify({
+                            cmd: "interaction",
+                            id: $(e.currentTarget).attr('value')
+                        }))
+                    })
+                }
+
+
+            })
+
+        </script>
+    </body>
+</html>
