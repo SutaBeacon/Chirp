@@ -69,9 +69,8 @@ try:
         interactionController.mainloop()
 
 except KeyboardInterrupt:
-    interactionController.terminate()
     wsInServer.join()
     wsFaceServer.join()
     wsControllerServer.join()
     httpServer.join()
-    pass
+    interactionController.terminate()

@@ -11,10 +11,8 @@ class InteractionControllerBase ():
     _messages = Queue()
     _handlers = {}
     commands = Queue()
-    _term = Event()
 
     def __init__(self):
-        self._term.clear()
         self._interactions = InteractionQueue()
         self._interactions.start()
         self.setup()
@@ -46,7 +44,10 @@ class InteractionControllerBase ():
         self.loop()
 
     def terminate(self):
-        self._term.set()
+        self.commands.close()
+        self._messages.close()
+        self._interactions.clear()
+        self._interactions.terminate()
 
     def onExit(self):
         pass

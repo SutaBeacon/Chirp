@@ -23,16 +23,21 @@ class SafeProcess (Process):
         self._term.clear()
 
     def _mainloop(self):
-        self.setup()
+        try:
+            self.setup()
 
-        while True:
-            self._checkTimers()
-            self._checkMessages()
-            if self._term.is_set():
-                break
-            self.loop()
+            while True:
+                self._checkTimers()
+                self._checkMessages()
+                if self._term.is_set():
+                    break
+                self.loop()
 
-        self.onExit()
+            self._messages.close()
+            self.commands.close()
+            self.onExit()
+        except KeyboardInterrupt:
+            pass
 
     def setAlarm(self, t, f):
         tid = self._tid
