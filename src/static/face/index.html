@@ -1,0 +1,135 @@
+<html>
+<head>
+	<title>Chirp Animator</title>
+</head>
+<body>
+<style>
+#box {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	background: red;
+}
+
+body {
+	overflow: hidden;
+	font-family: monospace;
+}
+
+canvas {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 760px;
+	height: 640px;
+	background: black;
+	transform: translate(-50%, -50%);
+}
+
+</style>
+
+<canvas id="canvas" resize style="background:black"></canvas>
+<script type="text/javascript" src="paper/paper-full.js"></script>
+<script>
+
+paper.install(window);
+
+shapes = []
+
+
+function pointOnCircle(center, radius, theta) {
+	xoff = Math.cos(theta) * radius;
+	yoff = Math.sin(theta) * radius;
+	return new Point(center.x + xoff, center.y + yoff);
+}
+
+
+function makeEye(center, radius) {
+
+	var points = []
+	var arcs = []
+
+	for (var i=0; i<16; i++) {
+		points.push(pointOnCircle(center, radius, i * Math.PI / 8));
+	}
+
+	for (var i=0; i<16; i+=2) {
+		arcs.push(new Path.Arc(points[i], points[(i+1) % 16], points[(i+2) % 16]))
+	}
+
+	for (var i=1; i<8; i++) {
+		arcs[0].lastSegment.handleOut = arcs[i].firstSegment.handleOut
+		arcs[0].add(arcs[i].lastSegment)
+		arcs[i].remove()
+		arcs[i] = null;
+	}
+
+	arcs[0].firstSegment.handleIn = arcs[0].lastSegment.handleIn
+	arcs[0].segments.splice(8, 1);
+
+	arcs[0].closed = true;
+
+	return arcs[0];
+
+}
+
+
+function makeMouth(center, wr, hr) {
+
+	p1 = new Point(center.x + wr, center.y)
+	p2 = new Point(center.x, center.y - hr)
+	p3 = new Point(center.x - wr, center.y)
+	p4 = new Point(center.x, center.y + hr)
+
+	ret = new Path();
+	ret.add(p1);
+	ret.add(p2);
+	ret.add(p3);
+	ret.add(p4);
+
+	ret.closed = true;
+
+	ret.smooth({ type: 'catmull-rom', factor: 0.1 });
+
+	return ret;
+
+}
+
+var wsOut = new WebSocket("ws://127.0.0.1:8000/"),
+	wsIn = new WebSocket("ws://127.0.0.1:8001/"),
+	messages = document.createElement('ul');
+wsIn.onmessage = function (event) {
+	var message = JSON.parse(event.data)
+	console.log(message)
+
+	switch (message.cmd) {
+		case "face-change":
+			console.log("changing to face animation " + message.id)
+			break
+	}
+};
+
+
+window.onload = function() {
+	// Setup directly from canvas id:
+	paper.setup('canvas');
+
+	Eye1 = makeEye(new Point(190, 270), 150);
+	Eye1.fillColor = 'white';
+	shapes.push(Eye1)
+
+	Eye2 = makeEye(new Point(570, 270), 150);
+	Eye2.fillColor = 'white';
+	shapes.push(Eye2)
+
+	Mouth = makeMouth(new Point(380, 430), 60, 35)
+	Mouth.fillColor = 'white';
+	shapes.push(Mouth)
+
+	view.onFrame = function(event) {
+
+	}
+}
+</script>
+</body>
+</html>
