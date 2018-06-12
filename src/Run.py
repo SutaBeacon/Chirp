@@ -14,13 +14,12 @@ wsFaceServer = WebSocketFaceServer(8001)
 wsControllerServer = WebSocketControllerServer(8002)
 httpServer = HTTPServer(8003)
 
-interactionController = InteractionController()
-
 wsInServer.start()
 wsFaceServer.start()
 wsControllerServer.start()
 httpServer.start()
-interactionController.start()
+
+interactionController = InteractionController()
 
 
 while not wsInServer.ready.is_set() and not wsFaceServer.ready.is_set() and not wsControllerServer.ready.is_set():
@@ -66,6 +65,8 @@ try:
         CheckSerialEvents(interactionController)
 
         DispatchCommands(interactionController)
+
+        interactionController.mainloop()
 
 except KeyboardInterrupt:
     interactionController.terminate()

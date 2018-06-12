@@ -6,7 +6,7 @@ import json
 from InteractionQueue import InteractionQueue
 
 
-class InteractionControllerBase (Process):
+class InteractionControllerBase ():
 
     _messages = Queue()
     _handlers = {}
@@ -14,10 +14,14 @@ class InteractionControllerBase (Process):
     _term = Event()
 
     def __init__(self):
-        super(InteractionControllerBase, self).__init__(target=self._mainloop)
+        self._term.clear()
+        self._interactions = InteractionQueue()
+        self._interactions.start()
+        self.setup()
 
     def message(self, msg):
-        self._messages.put(msg)
+        self._handlers[msg['src']](msg)
+        self._interactions.notify(msg)
 
     def send(self, dest, msg):
         cmd = {
@@ -30,16 +34,6 @@ class InteractionControllerBase (Process):
         self._handlers[src] = handler
 
     def _checkMessages(self):
-        # handle messages sent to me
-        while True:
-            try:
-                msg = self._messages.get(False)
-                self._handlers[msg['src']](msg)
-                self._interactions.notify(msg)
-            except Empty:
-                break
-
-        # handle messages sent by interactions to be relayed
         while True:
             try:
                 cmd = self._interactions.commands.get(False)
@@ -47,15 +41,9 @@ class InteractionControllerBase (Process):
             except Empty:
                 break
 
-    def _mainloop(self):
-        self._term.clear()
-        self._interactions = InteractionQueue()
-        self._interactions.start()
-        self.setup()
-        while not self._term.is_set():
-            self._checkMessages()
-            self.loop()
-        self.onExit()
+    def mainloop(self):
+        self._checkMessages()
+        self.loop()
 
     def terminate(self):
         self._term.set()
