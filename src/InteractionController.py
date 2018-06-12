@@ -1,38 +1,33 @@
-from multiprocessing import Process, Queue
-from queue import Empty
+from InteractionControllerBase import InteractionControllerBase
+from Interaction import Interaction
+from ConsoleLog import normal, notice
 
 
-class InteractionController (Process):
-
-    _messages = Queue()
-
-    def __init__(self):
-        super(InteractionController, self).__init__(target=self._mainloop)
-
-    def message(self, msg):
-        self._messages.put(msg)
-
-    def _checkMessages(self):
-        while True:
-            try:
-                self.onMessage(self._messages.get(False))
-            except Empty:
-                break
-
-    def _mainloop(self):
-        self.setup()
-
-        while True:
-            self._checkMessages()
-            self.loop()
-
-        self.onExit()
+class TestInteraction1(Interaction):
 
     def setup(self):
-        pass
+        self.addCallback('websocket', self.onWebSocket)
 
     def loop(self):
         pass
 
-    def onmessage(self, msg):
+    def onWebSocket(self, msg):
+        notice("Received from websocket: {}".format(msg['cmd']))
+        if msg['cmd'] == 'interaction':
+            self.send("face", {
+                "cmd": "face-change",
+                "id": msg["id"]
+            })
+
+
+class InteractionController (InteractionControllerBase):
+
+    def setup(self):
+        self.registerHandler('websocket', self.onWebsocket)
+        self._interactions.add(TestInteraction1)
+
+    def loop(self):
         pass
+
+    def onWebsocket(self, msg):
+        normal("Received from websocket: {}".format(msg['cmd']))

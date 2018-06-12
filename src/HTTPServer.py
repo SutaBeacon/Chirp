@@ -2,7 +2,7 @@ import http.server
 import socketserver
 from multiprocessing import Process, Queue
 
-from ConsoleLog import success, error
+from ConsoleLog import normal, error
 
 
 class HTTPServer(Process):
@@ -18,14 +18,14 @@ class HTTPServer(Process):
         while True:
             try:
                 httpd = socketserver.TCPServer(('', self.PORT), self.handler)
-                success("HTTP server started at port", self.PORT)
+                normal("HTTP server started at port", self.PORT)
                 try:
                     self.address.put("http://127.0.0.1:" + str(self.PORT) + "/static/face")
                     self.address.put("http://127.0.0.1:" + str(self.PORT) + "/static/controller")
                     httpd.serve_forever()
                 except KeyboardInterrupt:
                     httpd.server_close()
-                    success("HTTP server shut down.")
+                    normal("HTTP server shut down.")
             except socketserver.socket.error as exc:
                 if exc.args[0] != 48:
                     raise

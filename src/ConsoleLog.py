@@ -50,6 +50,16 @@ def warning(*args, **kwargs):
         lock.release()
 
 
+def notice(*args, **kwargs):
+    lock.acquire()
+    try:
+        print(Fore.LIGHTCYAN_EX + _getTimeLabel(), end='')
+        print(' ', end='')
+        print(*args, **kwargs)
+    finally:
+        lock.release()
+
+
 if __name__ == '__main__':
     def f(x):
         normal("This is normal text")

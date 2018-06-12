@@ -18,6 +18,10 @@ class InteractionQueue(Process):
     _canceling = Queue()
     _canceled = []
     _empty = Event()
+    _messages = Queue()
+    commands = Queue()
+
+    running = Event()
 
     def _assignID(self):
         self._nextID += 1
@@ -48,7 +52,9 @@ class InteractionQueue(Process):
     def run(self):
         normal("InteractionQueue running.")
         self._terminate.clear()
+        self.running.clear()
         while not self._terminate.is_set():
+            # get interaction ids to be canceled
             while True:
                 try:
                     _id = self._canceling.get(False)
@@ -56,6 +62,26 @@ class InteractionQueue(Process):
                         self._canceled.append(_id)
                 except Empty:
                     break
+
+            # handle notifications
+            while True:
+                try:
+                    msg = self._messages.get(False)
+                    if self._current is not None and self._current.is_alive():
+                        self._current.message(msg)
+                except Empty:
+                    break
+
+            # handle messages sent by interactions to be relayed
+            if self._current is not None and self._current.is_alive():
+                while True:
+                    try:
+                        cmd = self._current.commands.get(False)
+                        self.commands.put(cmd)
+                    except Empty:
+                        break
+
+            # handle skipping and clearing
             if self._skip.is_set():
                 if self._current is not None and self._current.is_alive():
                     self._skip.clear()
@@ -69,14 +95,19 @@ class InteractionQueue(Process):
                         except Empty:
                             break
                     self._clear.clear()
+                self.running.clear()
+
+            # handle skipping and clearing
             if self._current is None or not self._current.is_alive():
                 iid, nextInteraction = self._getNextInteraction()
                 if nextInteraction is not None:
                     self._empty.clear()
                     self._current = nextInteraction()
                     self._current.start()
+                    self.running.set()
                 else:
                     self._empty.set()
+                    self.running.clear()
         warning("Exiting interaction queue!")
 
     def cancel(self, id):
@@ -101,6 +132,9 @@ class InteractionQueue(Process):
 
     def isEmpty(self):
         return self._empty.is_set()
+
+    def notify(self, msg):
+        self._messages.put(msg)
 
 
 if __name__ == '__main__':

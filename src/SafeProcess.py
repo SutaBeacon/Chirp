@@ -1,6 +1,7 @@
 from multiprocessing import Process, Event, Queue
 from queue import Empty
 from time import sleep, time
+import json
 
 
 class SafeProcess (Process):
@@ -11,7 +12,11 @@ class SafeProcess (Process):
     _callbacks = {}
     _messages = Queue()
 
+    _delay = False
+
     _tid = 0
+
+    commands = Queue()
 
     def __init__(self):
         super(SafeProcess, self).__init__(target=self._mainloop)
@@ -34,7 +39,7 @@ class SafeProcess (Process):
         self._tid += 1
         targetT = time() + t
         self._timers.append([tid, targetT])
-        self._addCallback("timer" + str(tid), f)
+        self.addCallback("timer" + str(tid), f)
         return tid
 
     def _checkTimers(self):
@@ -46,7 +51,8 @@ class SafeProcess (Process):
     def _checkMessages(self):
         while True:
             try:
-                self.onMessage(self._messages.get(False))
+                msg = self._messages.get(False)
+                self._triggerEvent(msg['src'], msg)
             except Empty:
                 break
 
@@ -55,7 +61,7 @@ class SafeProcess (Process):
             for callback in self._callbacks[event]:
                 callback(*args)
 
-    def _addCallback(self, event, callback):
+    def addCallback(self, event, callback):
         if event not in self._callbacks:
             self._callbacks[event] = []
         self._callbacks[event].append(callback)
@@ -69,6 +75,13 @@ class SafeProcess (Process):
 
     def message(self, msg):
         self._messages.put(msg)
+
+    def send(self, dest, msg):
+        cmd = {
+            "dest": dest,
+            "content": json.dumps(msg)
+        }
+        self.commands.put(cmd)
 
     def event(self, event, *args):
         self._triggerEvent(event, *args)
