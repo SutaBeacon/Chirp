@@ -18,14 +18,14 @@ subprocess.call(["open", httpServer.address.get()])
 
 try:
     while True:
-        cmd = wsEvents.get(True)
-        success(cmd)
-        cmd = json.loads(cmd)
+        jcmd = wsEvents.get(True)
+        normal("Received", jcmd)
+        cmd = json.loads(jcmd)
 
         if cmd['cmd'] == 'interaction':
             interactionID = cmd['id']
             normal("Changing to interaction:", interactionID)
-        # wsCommands.put(cmd)
+        wsCommands.put(jcmd)
 except KeyboardInterrupt:
     wsInServer.join()
     wsOutServer.join()

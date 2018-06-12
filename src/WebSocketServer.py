@@ -3,7 +3,7 @@ import websockets
 from multiprocessing import Process, Queue
 from queue import Empty
 
-from ConsoleLog import normal, success
+from ConsoleLog import normal, success, warning
 
 
 wsEvents = Queue()
@@ -11,16 +11,26 @@ wsCommands = Queue()
 
 
 async def input_handler(websocket, path):
+    success("Incoming connection established.")
     while True:
-        evt = await websocket.recv()
+        try:
+            evt = await websocket.recv()
+        except websockets.ConnectionClosed:
+            warning("Incoming connection closed.")
+            break
         wsEvents.put(evt)
 
 
 async def output_handler(websocket, path):
+    success("Outgoing connection established.")
     while True:
         cmd = wsCommands.get(True)
         normal("Got message:", cmd)
-        await websocket.send(cmd)
+        try:
+            await websocket.send(cmd)
+        except websockets.ConnectionClosed:
+            warning("Outgoing connection closed.")
+            break
 
 
 class WebSocketOutServer(Process):
@@ -30,7 +40,7 @@ class WebSocketOutServer(Process):
         self.port = port
 
     def run(self):
-        self.start_server = websockets.serve(output_handler, 'localhost', self.port)
+        self.start_server = websockets.serve(output_handler, '0.0.0.0', self.port)
 
         asyncio.get_event_loop().run_until_complete(self.start_server)
         normal("Starting WebSocket Server at", self.port)
@@ -52,7 +62,7 @@ class WebSocketInServer(Process):
         self.port = port
 
     def run(self):
-        self.start_server = websockets.serve(input_handler, 'localhost', self.port)
+        self.start_server = websockets.serve(input_handler, '0.0.0.0', self.port)
 
         asyncio.get_event_loop().run_until_complete(self.start_server)
         normal("Starting WebSocket Server at", self.port)
