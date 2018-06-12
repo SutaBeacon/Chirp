@@ -14,7 +14,6 @@ class InteractionControllerBase ():
 
     def __init__(self):
         self._interactions = InteractionQueue()
-        self._interactions.start()
         self.setup()
 
     def message(self, msg):
@@ -41,6 +40,7 @@ class InteractionControllerBase ():
 
     def mainloop(self):
         self._checkMessages()
+        self._interactions.update()
         self.loop()
 
     def terminate(self):
