@@ -2,7 +2,7 @@ import http.server
 import socketserver
 from multiprocessing import Process, Queue
 
-from ConsoleLog import normal, success, error
+from ConsoleLog import success, error
 
 
 class HTTPServer(Process):
@@ -15,17 +15,14 @@ class HTTPServer(Process):
         self.handler = http.server.SimpleHTTPRequestHandler
 
     def run(self):
-        normal("Starting HTTP Server...")
-
         while True:
             try:
                 httpd = socketserver.TCPServer(('', self.PORT), self.handler)
-                success("Serving at port", self.PORT)
+                success("HTTP server started at port", self.PORT)
                 try:
                     self.address.put("http://127.0.0.1:" + str(self.PORT) + "/static/")
                     httpd.serve_forever()
                 except KeyboardInterrupt:
-                    normal("Shutting down HTTP server.")
                     httpd.server_close()
                     success("HTTP server shut down.")
             except socketserver.socket.error as exc:

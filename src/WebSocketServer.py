@@ -1,7 +1,6 @@
 import asyncio
 import websockets
-from multiprocessing import Process, Queue
-from queue import Empty
+from multiprocessing import Process, Queue, Event
 
 from ConsoleLog import normal, success, warning
 
@@ -35,46 +34,50 @@ async def output_handler(websocket, path):
 
 class WebSocketOutServer(Process):
 
+    ready = Event()
+
     def __init__(self, port):
         super(WebSocketOutServer, self).__init__()
         self.port = port
+        self.ready.clear()
 
     def run(self):
         self.start_server = websockets.serve(output_handler, '0.0.0.0', self.port)
 
         asyncio.get_event_loop().run_until_complete(self.start_server)
-        normal("Starting WebSocket Server at", self.port)
-        success("WebSocket server started.")
+        success("Outgoing websocket server started at", self.port)
         loop = asyncio.get_event_loop()
         try:
+            self.ready.set()
             loop.run_forever()
         except KeyboardInterrupt:
-            normal("Shutting down WebSocket server.")
             loop.stop()
             loop.close()
-            success("Websocket server shut down.")
+            success("Outgoing websocket server shut down.")
 
 
 class WebSocketInServer(Process):
 
+    ready = Event()
+
     def __init__(self, port):
         super(WebSocketInServer, self).__init__()
         self.port = port
+        self.ready.clear()
 
     def run(self):
         self.start_server = websockets.serve(input_handler, '0.0.0.0', self.port)
 
         asyncio.get_event_loop().run_until_complete(self.start_server)
-        normal("Starting WebSocket Server at", self.port)
-        success("WebSocket server started.")
+        success("Outgoing websocket server started at", self.port)
         loop = asyncio.get_event_loop()
         try:
+            self.ready.set()
             loop.run_forever()
         except KeyboardInterrupt:
-            normal("Shutting down WebSocket server.")
             loop.stop()
             loop.close()
-            success("Websocket server shut down.")
+            success("Incoming websocket server shut down.")
 
 
 if __name__ == '__main__':

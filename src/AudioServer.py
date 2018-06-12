@@ -1,5 +1,4 @@
 import pyaudio
-import sys
 import numpy as np
 import aubio
 
@@ -16,23 +15,21 @@ class AudioServer(SafeProcess):
     record_duration = None
 
     tolerance = 0.8
-    win_s = 4096 # fft size
-    hop_s = buffer_size # hop size
-
+    win_s = 4096  # fft size
+    hop_s = buffer_size  # hop size
 
     def setup(self):
         print("*** starting recording")
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(format=self.pyaudio_format,
-            channels=self.n_channels,
-            rate=self.samplerate,
-            input=True,
-            frames_per_buffer=self.buffer_size)
+                                  channels=self.n_channels,
+                                  rate=self.samplerate,
+                                  input=True,
+                                  frames_per_buffer=self.buffer_size)
 
         self.pitch_o = aubio.pitch("default", self.win_s, self.hop_s, self.samplerate)
         self.pitch_o.set_unit("midi")
         self.pitch_o.set_tolerance(self.tolerance)
-
 
     def loop(self):
         try:
@@ -48,12 +45,12 @@ class AudioServer(SafeProcess):
             print("*** Ctrl+C pressed, exiting")
             self.terminate()
 
-
     def onExit(self):
         print("*** done recording")
-        stream.stop_stream()
-        stream.close()
-        p.terminate()
+        self.stream.stop_stream()
+        self.stream.close()
+        self.p.terminate()
+
 
 if __name__ == '__main__':
     audioServer = AudioServer()

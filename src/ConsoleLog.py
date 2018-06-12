@@ -7,10 +7,14 @@ init()
 lock = Lock()
 
 
+def _getTimeLabel():
+    return '[{0:%Y-%m-%d %H:%M:%S}]'.format(datetime.datetime.now())
+
+
 def normal(*args, **kwargs):
     lock.acquire()
     try:
-        print(Style.RESET_ALL + '[{0:%Y-%m-%d %H:%M:%S}] '.format(datetime.datetime.now()), end='')
+        print(Style.RESET_ALL + _getTimeLabel(), end='')
         print(*args, **kwargs)
     finally:
         lock.release()
@@ -19,7 +23,7 @@ def normal(*args, **kwargs):
 def error(*args, **kwargs):
     lock.acquire()
     try:
-        print(Fore.RED + '[{0:%Y-%m-%d %H:%M:%S}]'.format(datetime.datetime.now()), end='')
+        print(Fore.RED + _getTimeLabel(), end='')
         print(" ERROR: ", end='')
         print(*args, **kwargs)
     finally:
@@ -29,7 +33,7 @@ def error(*args, **kwargs):
 def success(*args, **kwargs):
     lock.acquire()
     try:
-        print(Fore.GREEN + '[{0:%Y-%m-%d %H:%M:%S}]'.format(datetime.datetime.now()), end='')
+        print(Fore.GREEN + _getTimeLabel(), end='')
         print(' SUCCESS: ', end='')
         print(*args, **kwargs)
     finally:
@@ -39,7 +43,7 @@ def success(*args, **kwargs):
 def warning(*args, **kwargs):
     lock.acquire()
     try:
-        print(Fore.YELLOW + '[{0:%Y-%m-%d %H:%M:%S}]'.format(datetime.datetime.now()), end='')
+        print(Fore.YELLOW + _getTimeLabel(), end='')
         print(' WARNING: ', end='')
         print(*args, **kwargs)
     finally:

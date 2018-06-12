@@ -102,7 +102,7 @@ if __name__ == '__main__':
             # 会在进程开始时运行一次
             print("setup")
             # 设一个一秒钟之后触发的 alarm，触发时调用 testAlarm
-            self.setAlarm(1.0, testAlarm)
+            self.setAlarm(1.0, self.testAlarm)
 
         def loop(self):
             # 会在进程运行过程中不断重复被调用

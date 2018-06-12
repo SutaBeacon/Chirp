@@ -1,9 +1,10 @@
 import json
 import subprocess
 
-from WebSocketServer import WebSocketInServer, WebSocketOutServer, wsEvents, wsCommands
+from WebSocketServer import WebSocketInServer, WebSocketOutServer
+from WebSocketServer import wsEvents, wsCommands
 from HTTPServer import HTTPServer
-from ConsoleLog import normal, success
+from ConsoleLog import normal
 
 wsInServer = WebSocketInServer(8000)
 wsOutServer = WebSocketOutServer(8001)
@@ -14,6 +15,8 @@ wsOutServer.start()
 httpServer.start()
 
 normal("Starting browser window...")
+while not wsInServer.ready.is_set() and not wsOutServer.ready.is_set():
+    pass
 subprocess.call(["open", httpServer.address.get()])
 
 try:
