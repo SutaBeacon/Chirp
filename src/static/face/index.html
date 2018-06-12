@@ -1,6 +1,7 @@
 <html>
 <head>
 	<title>Chirp Animator</title>
+	<title>Chirp Player</title>
 </head>
 <body>
 <style>
@@ -98,6 +99,8 @@ function makeMouth(center, wr, hr) {
 var wsOut = new WebSocket("ws://127.0.0.1:8000/"),
 	wsIn = new WebSocket("ws://127.0.0.1:8001/"),
 	messages = document.createElement('ul');
+wsIn = new WebSocket("ws://127.0.0.1:8001/"),
+messages = document.createElement('ul');
 wsIn.onmessage = function (event) {
 	var message = JSON.parse(event.data)
 	console.log(message)
@@ -106,6 +109,8 @@ wsIn.onmessage = function (event) {
 		case "face-change":
 			console.log("changing to face animation " + message.id)
 			break
+		console.log("changing to face animation " + message.id)
+		break
 	}
 };
 
@@ -128,6 +133,10 @@ window.onload = function() {
 
 	view.onFrame = function(event) {
 
+	//
+	//根据 message.id 播放相应JSON动画
+	//播放前向wsOut发送通知
+	//
 	}
 }
 </script>
