@@ -1,23 +1,27 @@
 import json
 import subprocess
 
-from WebSocketServer import WebSocketInServer, WebSocketOutServer
-from WebSocketServer import wsEvents, wsCommands
+from WebSocketServer import WebSocketInServer, WebSocketFaceServer, WebSocketControllerServer
+from WebSocketServer import wsEvents, wsFaceCommands, wsControllerCommands
 from HTTPServer import HTTPServer
 from ConsoleLog import normal
 
 wsInServer = WebSocketInServer(8000)
-wsOutServer = WebSocketOutServer(8001)
-httpServer = HTTPServer(8002)
+wsFaceServer = WebSocketFaceServer(8001)
+wsControllerServer = WebSocketControllerServer(8002)
+httpServer = HTTPServer(8003)
 
 wsInServer.start()
-wsOutServer.start()
+wsFaceServer.start()
+wsControllerServer.start()
 httpServer.start()
 
-normal("Starting browser window...")
-while not wsInServer.ready.is_set() and not wsOutServer.ready.is_set():
+
+while not wsInServer.ready.is_set() and not wsFaceServer.ready.is_set() and not wsControllerServer.ready.is_set():
     pass
-subprocess.call(["open", httpServer.address.get()])
+normal("Starting browser window...")
+subprocess.call(["open", httpServer.address.get()])  # open player
+subprocess.call(["open", httpServer.address.get()])  # open controller
 
 try:
     while True:
@@ -28,9 +32,12 @@ try:
         if cmd['cmd'] == 'interaction':
             interactionID = cmd['id']
             normal("Changing to interaction:", interactionID)
-        wsCommands.put(jcmd)
+            cmd['cmd'] = "face-change"
+            wsFaceCommands.put(json.dumps(cmd))
+            wsControllerCommands.put(json.dumps(cmd))
 except KeyboardInterrupt:
     wsInServer.join()
-    wsOutServer.join()
+    wsFaceServer.join()
+    wsControllerServer.join()
     httpServer.join()
     pass

@@ -14,7 +14,7 @@ def _getTimeLabel():
 def normal(*args, **kwargs):
     lock.acquire()
     try:
-        print(Style.RESET_ALL + _getTimeLabel(), end='')
+        print(Style.RESET_ALL + _getTimeLabel() + ' ', end='')
         print(*args, **kwargs)
     finally:
         lock.release()

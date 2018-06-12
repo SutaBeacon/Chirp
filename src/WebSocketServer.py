@@ -1,12 +1,14 @@
 import asyncio
 import websockets
+import time
 from multiprocessing import Process, Queue, Event
 
 from ConsoleLog import normal, success, warning
 
 
 wsEvents = Queue()
-wsCommands = Queue()
+wsFaceCommands = Queue()
+wsControllerCommands = Queue()
 
 
 async def input_handler(websocket, path):
@@ -20,10 +22,10 @@ async def input_handler(websocket, path):
         wsEvents.put(evt)
 
 
-async def output_handler(websocket, path):
+async def face_handler(websocket, path):
     success("Outgoing connection established.")
     while True:
-        cmd = wsCommands.get(True)
+        cmd = wsFaceCommands.get(True)
         normal("Got message:", cmd)
         try:
             await websocket.send(cmd)
@@ -32,17 +34,53 @@ async def output_handler(websocket, path):
             break
 
 
-class WebSocketOutServer(Process):
+async def controller_handler(websocket, path):
+    success("Outgoing connection established.")
+    while True:
+        cmd = wsControllerCommands.get(True)
+        normal("Got message:", cmd)
+        try:
+            await websocket.send(cmd)
+        except websockets.ConnectionClosed:
+            warning("Outgoing connection closed.")
+            break
+
+
+class WebSocketControllerServer(Process):
 
     ready = Event()
 
     def __init__(self, port):
-        super(WebSocketOutServer, self).__init__()
+        super(WebSocketControllerServer, self).__init__()
         self.port = port
         self.ready.clear()
 
     def run(self):
-        self.start_server = websockets.serve(output_handler, '0.0.0.0', self.port)
+        self.start_server = websockets.serve(controller_handler, '0.0.0.0', self.port)
+
+        asyncio.get_event_loop().run_until_complete(self.start_server)
+        success("Outgoing websocket server started at", self.port)
+        loop = asyncio.get_event_loop()
+        try:
+            self.ready.set()
+            loop.run_forever()
+        except KeyboardInterrupt:
+            loop.stop()
+            loop.close()
+            success("Outgoing websocket server shut down.")
+
+
+class WebSocketFaceServer(Process):
+
+    ready = Event()
+
+    def __init__(self, port):
+        super(WebSocketFaceServer, self).__init__()
+        self.port = port
+        self.ready.clear()
+
+    def run(self):
+        self.start_server = websockets.serve(face_handler, '0.0.0.0', self.port)
 
         asyncio.get_event_loop().run_until_complete(self.start_server)
         success("Outgoing websocket server started at", self.port)
@@ -80,7 +118,8 @@ class WebSocketInServer(Process):
             success("Incoming websocket server shut down.")
 
 
+
 if __name__ == '__main__':
-    wsServer = WebSocketOutServer(8000)
+    wsServer = WebSocketInServer(8765)
     wsServer.start()
     wsServer.join()

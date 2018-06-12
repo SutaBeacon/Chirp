@@ -20,7 +20,8 @@ class HTTPServer(Process):
                 httpd = socketserver.TCPServer(('', self.PORT), self.handler)
                 success("HTTP server started at port", self.PORT)
                 try:
-                    self.address.put("http://127.0.0.1:" + str(self.PORT) + "/static/")
+                    self.address.put("http://127.0.0.1:" + str(self.PORT) + "/static/player")
+                    self.address.put("http://127.0.0.1:" + str(self.PORT) + "/static/controller")
                     httpd.serve_forever()
                 except KeyboardInterrupt:
                     httpd.server_close()
