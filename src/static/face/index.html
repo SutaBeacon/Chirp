@@ -30,11 +30,15 @@ canvas {
 
 <canvas id="canvas" resize style="background:black"></canvas>
 <script type="text/javascript" src="paper/paper-full.js"></script>
+<script type="text/javascript" src="src/jquery.min.js"></script>
+
 <script>
 
 paper.install(window);
 
 shapes = []
+
+
 
 
 function pointOnCircle(center, radius, theta) {
@@ -126,12 +130,44 @@ window.onload = function() {
 	Mouth.fillColor = 'white';
 	shapes.push(Mouth)
 
+	fileNames = [
+			"JSON/Happy.json", "JSON/Grumpy.json"
+	]
+	jsonArr = [];
+	counter = 0;
+	for (var i = 0; i < fileNames.length; i++){
+		$.getJSON(fileNames[i], function(data) {
+
+			jsonData = JSON.stringify(data);
+
+			jsonArr.push(JSON.parse(jsonData));
+			console.log(jsonArr[0].layers[0].values[0].shape);
+			counter++;
+			if(counter == fileNames.length){
+				//console.log(jsonArr);
+			}
+			//console.log(jsonArr[0]);
+		})
+	}
+
+		//console.log($.getJSON(fileNames[1]));
+
+	//var jsonData = JSON.parse(jsonArr[0]);
+
+
 	view.onFrame = function(event) {
+			/*currentJson = jsonArr[message];
+			Eye1.anim(target.Eye1)
+			Eye2.anim(target.Eye2)
+			Mouth.anim(target.Mouth)*/
+
+		}
+
 	//
 	//根据 message.id 播放相应JSON动画
 	//播放前向wsOut发送通知
 	//
-	}
+
 }
 </script>
 </body>
