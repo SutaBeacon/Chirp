@@ -1,6 +1,10 @@
 import json
 import subprocess
 from queue import Empty
+from glob import glob
+from os.path import split
+from time import sleep
+import json
 
 from WebSocketServer import WebSocketInServer
 from WebSocketServer import WebSocketFaceServer, WebSocketControllerServer
@@ -58,6 +62,18 @@ def DispatchCommands(interactionController):
         except Empty:
             break
 
+sleep(1)
+
+animations = glob("static/animations/*.json")
+for i, anim in enumerate(animations):
+    animations[i] = split(anim)[-1]
+
+cmd = {
+    'cmd': 'face-load',
+    'filenames': animations
+}
+wsFaceCommands.put(json.dumps(cmd))
+wsControllerCommands.put(json.dumps(cmd))
 
 try:
     while True:

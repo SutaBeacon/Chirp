@@ -21,28 +21,35 @@
 
         <script>
             var wsOut = new WebSocket("ws://127.0.0.1:8000/"),
-                wsIn = new WebSocket("ws://127.0.0.1:8002/"),
-                messages = document.createElement('ul');
+                wsIn = new WebSocket("ws://127.0.0.1:8002/");
             wsIn.onmessage = function (event) {
-                var content = document.createTextNode(event.data);
-                console.log(event.data)
+                var message = JSON.parse(event.data);
+            	// console.log(message);
+
+            	switch (message.cmd) {
+
+
+            		case "face-load":
+            		var fileNames = message.filenames;
+                    //console.log(fileNames);
+
+                    for (var i=0; i<fileNames.length; i++) {
+                        $("#interactions").append("<a href=\"#!\" class=\"collection-item\" id=\"interaction-" + i + "\" value=\"" + i + "\">#" + i + ": " + fileNames[i] + "</a>")
+
+                        $("#interaction-" + i).click(function (e) {
+                            wsOut.send(JSON.stringify({
+                                cmd: "interaction",
+                                id: $(e.currentTarget).attr('value')
+                            }))
+                        })
+                    }
+            		break;
+            	}
             };
 
             $(document).ready(function () {
-                interactions = [
-                    "Happy.json", "Grumpy.json"
-                ]
 
-                for (var i=0; i<interactions.length; i++) {
-                    $("#interactions").append("<a href=\"#!\" class=\"collection-item\" id=\"interaction-" + i + "\" value=\"" + i + "\">#" + i + ": " + interactions[i] + "</a>")
 
-                    $("#interaction-" + i).click(function (e) {
-                        wsOut.send(JSON.stringify({
-                            cmd: "interaction",
-                            id: $(e.currentTarget).attr('value')
-                        }))
-                    })
-                }
 
 
             })

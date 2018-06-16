@@ -14,6 +14,7 @@
 body {
 	overflow: hidden;
 	font-family: monospace;
+	background: black;
 }
 
 canvas {
@@ -99,25 +100,98 @@ function makeMouth(center, wr, hr) {
 
 }
 
+
 var wsOut = new WebSocket("ws://127.0.0.1:8000/"),
-wsIn = new WebSocket("ws://127.0.0.1:8001/"),
-messages = document.createElement('ul');
+wsIn = new WebSocket("ws://127.0.0.1:8001/");
+
+currentAnimation = null;
+startAnimation = false;
+
 wsIn.onmessage = function (event) {
-	var message = JSON.parse(event.data)
-	console.log(message)
+	var message = JSON.parse(event.data);
+	// console.log(message);
 
 	switch (message.cmd) {
 		case "face-change":
-		console.log("changing to face animation " + message.id)
-		break
+		// console.log("changing to face animation " + message.id);
+		currentAnimation = animations[message.id].layers;
+		// console.log(currentAnimation);
+		startAnimation = true;
+		break;
+
+
+		case "face-load":
+		// console.log("changing to face animation " + message.id);
+		var fileNames = message.filenames;
+
+		// 加载动画文件，加载完成后设 finishedLoading 为真，通知 onFrame 可以播放，并发送 websocket 消息，通知 InteractionController。
+		var counter = 0;
+		var ids = []
+		for (var i = 0; i < fileNames.length; i++){
+			$.ajaxSettings.async = false;
+			$.getJSON("../animations/" + fileNames[i], function(data) {
+
+				data.layers.map(function (layer, indl) {
+					layer.values.map(function (key, indk) {
+						var _shape = shapes[indl].clone({insert: false});
+						_shape.importJSON(JSON.stringify(key.shape))
+						key.shape = _shape;
+					})
+				});
+
+				animations[i] = data;
+
+				counter++;
+				if(counter == fileNames.length){
+					finishedLoading = true;
+					// 发送消息给 InteractionController
+					wsOut.send(JSON.stringify({
+						cmd: 'animations-loaded'
+					}))
+				}
+			})
+			$.ajaxSettings.async = true;
+		}
+		break;
 	}
 };
 
+
+function getKeyframes(keys, t) {
+	var _start = null, _end = null, _value = null;
+	for (var i=0; i<keys.length; i++) {
+		if (keys[i].time == t) {
+			_start = keys[i];
+			_end = keys[i + 1];
+			_value = 0;
+			break
+		} else if (keys[i].time > t) {
+			_start = keys[i - 1];
+			_end = keys[i];
+			_value = (t - _start.time) / (_end.time - _start.time);
+			break
+		} else if (keys[i].time < t && i == keys.length - 1) {
+			_start = keys[i];
+			_end = undefined;
+			_value = 0;
+			break
+		}
+	}
+	return {
+		start: _start,
+		end: _end,
+		value: _value
+	}
+}
+
+animations = [];
+finishedLoading = false;
 
 window.onload = function() {
 	// Setup directly from canvas id:
 	paper.setup('canvas');
 
+	// 画脸
 	Eye1 = makeEye(new Point(190, 270), 150);
 	Eye1.fillColor = 'white';
 	shapes.push(Eye1)
@@ -130,38 +204,77 @@ window.onload = function() {
 	Mouth.fillColor = 'white';
 	shapes.push(Mouth)
 
-	fileNames = [
-			"JSON/Happy.json", "JSON/Grumpy.json"
-	]
-	jsonArr = [];
-	counter = 0;
-	for (var i = 0; i < fileNames.length; i++){
-		$.getJSON(fileNames[i], function(data) {
 
-			jsonData = JSON.stringify(data);
+	currentTime = 0;
+	currentAnimCurve = null;
+	startTime = 0;
+	playing = false;
+	interpolating = false;
+	interStart = null;
+	interEnd = null;
 
-			jsonArr.push(JSON.parse(jsonData));
-			console.log(jsonArr[0].layers[0].values[0].shape);
-			counter++;
-			if(counter == fileNames.length){
-				//console.log(jsonArr);
-			}
-			//console.log(jsonArr[0]);
-		})
-	}
-
-		//console.log($.getJSON(fileNames[1]));
-
-	//var jsonData = JSON.parse(jsonArr[0]);
-
+	interpolateTime = 0.2;
 
 	view.onFrame = function(event) {
-			/*currentJson = jsonArr[message];
-			Eye1.anim(target.Eye1)
-			Eye2.anim(target.Eye2)
-			Mouth.anim(target.Mouth)*/
+		if (finishedLoading) {
 
+			currentTime = event.time - startTime;
+
+			if (startAnimation) {
+				startAnimation = false;
+				startTime = event.time;
+				currentTime = 0;
+
+				// 把当前的 shapes 存为 interpolation 的开始
+				interStart = [];
+				for (var i=0; i<shapes.length; i++) {
+					interStart.push(shapes[i].clone({insert: false}));
+				}
+
+				// 把要 interpolate 的动画的帧存为 interpolation 的结束
+				interEnd = [];
+				for (var i=0; i<shapes.length; i++) {
+					var _shape = shapes[i].clone({insert: false})
+					var keys = getKeyframes(currentAnimation[i].values, interpolateTime);
+					if (keys.end) {
+						_shape.interpolate(keys.start.shape, keys.end.shape, Tweens[keys.start.tween](keys.value));
+					} else {
+						_shape = currentAnimation[i].values[0].shape;
+					}
+					interEnd.push(_shape);
+				}
+
+				//开始 interpolation
+				interpolating = true;
+
+			} else if (interpolating) {
+				for (var i=0; i<shapes.length; i++) {
+					// 默认 interpolation 的 animCurve 是 easeInOutSine
+
+					// console.log(currentTime / interpolateTime);
+					shapes[i].interpolate(interStart[i], interEnd[i], Tweens.easeInOutSine(currentTime / interpolateTime));
+				}
+				if (currentTime > interpolateTime) {
+					// 如果 currentTime > interpolateTime，interpolation 应该已经结束了。此时标记结束，并设置 playing 以在下一轮开始播放动画。
+					interpolating = false;
+					interStart = null;
+					interEnd = null;
+					playing = true;
+				}
+			} else if (playing) {
+				for (var i=0; i<shapes.length; i++) {
+					var keys = getKeyframes(currentAnimation[i].values, currentTime);
+					if (keys.end) {
+						var _interp = keys.start.tween;
+						//console.log(currentTime - keys[0].time, _totalTime, Tweens[_interp](currentTime - keys[0].time / _totalTime));
+						shapes[i].interpolate(keys.start.shape, keys.end.shape, Tweens[_interp](keys.value));
+					} else {
+						playing = false;
+					}
+				}
+			}
 		}
+	}
 
 	//
 	//根据 message.id 播放相应JSON动画
@@ -169,6 +282,299 @@ window.onload = function() {
 	//
 
 }
+
+var Tweens = {
+	none: function(k) {
+		return 0;
+	},
+	linear: function ( t ) {
+	    return t;
+	},
+	// Slight acceleration from zero to full speed
+	easeInSine: function ( t ) {
+	    return -1 * Math.cos( t * ( Math.PI / 2 ) ) + 1;
+	},
+	// Slight deceleration at the end
+	easeOutSine: function ( t ) {
+	    return Math.sin( t * ( Math.PI / 2 ) );
+	},
+	// Slight acceleration at beginning and slight deceleration at end
+	easeInOutSine: function ( t ) {
+	    return -0.5 * ( Math.cos( Math.PI * t ) - 1 );
+	},
+	// Accelerating from zero velocity
+	easeInQuad: function ( t ) {
+	    return t * t;
+	},
+	// Decelerating to zero velocity
+	easeOutQuad: function ( t ) {
+	    return t * ( 2 - t );
+	},
+	// Acceleration until halfway, then deceleration
+	easeInOutQuad: function ( t ) {
+	    return t < 0.5 ? 2 * t * t : - 1 + ( 4 - 2 * t ) * t;
+	},
+	// Accelerating from zero velocity
+	easeInCubic: function ( t ) {
+	    return t * t * t;
+	},
+	// Decelerating to zero velocity
+	easeOutCubic: function ( t ) {
+	    const t1 = t - 1;
+	    return t1 * t1 * t1 + 1;
+	},
+	// Acceleration until halfway, then deceleration
+	easeInOutCubic: function ( t ) {
+	    return t < 0.5 ? 4 * t * t * t : ( t - 1 ) * ( 2 * t - 2 ) * ( 2 * t - 2 ) + 1;
+	},
+	// Accelerating from zero velocity
+	easeInQuart: function ( t ) {
+	    return t * t * t * t;
+	},
+	// Decelerating to zero velocity
+	easeOutQuart: function ( t ) {
+	    const t1 = t - 1;
+	    return 1 - t1 * t1 * t1 * t1;
+	},
+	// Acceleration until halfway, then deceleration
+	easeInOutQuart: function ( t ) {
+	    const t1 = t - 1;
+	    return t < 0.5 ? 8 * t * t * t * t : 1 - 8 * t1 * t1 * t1 * t1;
+	},
+	// Accelerating from zero velocity
+	easeInQuint: function ( t ) {
+	    return t * t * t * t * t;
+	},
+	// Decelerating to zero velocity
+	easeOutQuint: function ( t ) {
+	    const t1 = t - 1;
+	    return 1 + t1 * t1 * t1 * t1 * t1;
+	},
+	// Acceleration until halfway, then deceleration
+	easeInOutQuint: function ( t ) {
+	    const t1 = t - 1;
+	    return t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * t1 * t1 * t1 * t1 * t1;
+	},
+	// Accelerate exponentially until finish
+	easeInExpo: function ( t ) {
+
+	    if( t === 0 ) {
+	        return 0;
+	    }
+
+	    return Math.pow( 2, 10 * ( t - 1 ) );
+
+	},
+	// Initial exponential acceleration slowing to stop
+	easeOutExpo: function ( t ) {
+
+	    if( t === 1 ) {
+	        return 1;
+	    }
+
+	    return ( -Math.pow( 2, -10 * t ) + 1 );
+
+	},
+
+	// Exponential acceleration and deceleration
+	easeInOutExpo: function ( t ) {
+
+	    if( t === 0 || t === 1 ) {
+	        return t;
+	    }
+
+	    const scaledTime = t * 2;
+	    const scaledTime1 = scaledTime - 1;
+
+	    if( scaledTime < 1 ) {
+	        return 0.5 * Math.pow( 2, 10 * ( scaledTime1 ) );
+	    }
+
+	    return 0.5 * ( -Math.pow( 2, -10 * scaledTime1 ) + 2 );
+
+	},
+
+	// Increasing velocity until stop
+	easeInCirc: function ( t ) {
+
+	    const scaledTime = t / 1;
+	    return -1 * ( Math.sqrt( 1 - scaledTime * t ) - 1 );
+
+	},
+
+	// Start fast, decreasing velocity until stop
+	easeOutCirc: function ( t ) {
+
+	    const t1 = t - 1;
+	    return Math.sqrt( 1 - t1 * t1 );
+
+	},
+
+	// Fast increase in velocity, fast decrease in velocity
+	easeInOutCirc: function ( t ) {
+
+	    const scaledTime = t * 2;
+	    const scaledTime1 = scaledTime - 2;
+
+	    if( scaledTime < 1 ) {
+	        return -0.5 * ( Math.sqrt( 1 - scaledTime * scaledTime ) - 1 );
+	    }
+
+	    return 0.5 * ( Math.sqrt( 1 - scaledTime1 * scaledTime1 ) + 1 );
+
+	},
+
+	// Slow movement backwards then fast snap to finish
+	easeInBack( t, magnitude = 1.70158 ) {
+
+	    return t * t * ( ( magnitude + 1 ) * t - magnitude );
+
+	},
+
+	// Fast snap to backwards point then slow resolve to finish
+	easeOutBack( t, magnitude = 1.70158 ) {
+
+	    const scaledTime = ( t / 1 ) - 1;
+
+	    return (
+	        scaledTime * scaledTime * ( ( magnitude + 1 ) * scaledTime + magnitude )
+	    ) + 1;
+
+	},
+
+	// Slow movement backwards, fast snap to past finish, slow resolve to finish
+	easeInOutBack( t, magnitude = 1.70158 ) {
+
+	    const scaledTime = t * 2;
+	    const scaledTime2 = scaledTime - 2;
+
+	    const s = magnitude * 1.525;
+
+	    if( scaledTime < 1) {
+
+	        return 0.5 * scaledTime * scaledTime * (
+	            ( ( s + 1 ) * scaledTime ) - s
+	        );
+
+	    }
+
+	    return 0.5 * (
+	        scaledTime2 * scaledTime2 * ( ( s + 1 ) * scaledTime2 + s ) + 2
+	    );
+
+	},
+	// Bounces slowly then quickly to finish
+	easeInElastic( t, magnitude = 0.7 ) {
+
+	    if( t === 0 || t === 1 ) {
+	        return t;
+	    }
+
+	    const scaledTime = t / 1;
+	    const scaledTime1 = scaledTime - 1;
+
+	    const p = 1 - magnitude;
+	    const s = p / ( 2 * Math.PI ) * Math.asin( 1 );
+
+	    return -(
+	        Math.pow( 2, 10 * scaledTime1 ) *
+	        Math.sin( ( scaledTime1 - s ) * ( 2 * Math.PI ) / p )
+	    );
+
+	},
+
+	// Fast acceleration, bounces to zero
+	easeOutElastic( t, magnitude = 0.7 ) {
+
+	    const p = 1 - magnitude;
+	    const scaledTime = t * 2;
+
+	    if( t === 0 || t === 1 ) {
+	        return t;
+	    }
+
+	    const s = p / ( 2 * Math.PI ) * Math.asin( 1 );
+	    return (
+	        Math.pow( 2, -10 * scaledTime ) *
+	        Math.sin( ( scaledTime - s ) * ( 2 * Math.PI ) / p )
+	    ) + 1;
+
+	},
+
+	// Slow start and end, two bounces sandwich a fast motion
+	easeInOutElastic( t, magnitude = 0.65 ) {
+
+	    const p = 1 - magnitude;
+
+	    if( t === 0 || t === 1 ) {
+	        return t;
+	    }
+
+	    const scaledTime = t * 2;
+	    const scaledTime1 = scaledTime - 1;
+
+	    const s = p / ( 2 * Math.PI ) * Math.asin( 1 );
+
+	    if( scaledTime < 1 ) {
+	        return -0.5 * (
+	            Math.pow( 2, 10 * scaledTime1 ) *
+	            Math.sin( ( scaledTime1 - s ) * ( 2 * Math.PI ) / p )
+	        );
+	    }
+
+	    return (
+	        Math.pow( 2, -10 * scaledTime1 ) *
+	        Math.sin( ( scaledTime1 - s ) * ( 2 * Math.PI ) / p ) * 0.5
+	    ) + 1;
+
+	},
+
+	// Bounce to completion
+	easeOutBounce: function ( t ) {
+
+	    const scaledTime = t / 1;
+
+	    if( scaledTime < ( 1 / 2.75 ) ) {
+
+	        return 7.5625 * scaledTime * scaledTime;
+
+	    } else if( scaledTime < ( 2 / 2.75 ) ) {
+
+	        const scaledTime2 = scaledTime - ( 1.5 / 2.75 );
+	        return ( 7.5625 * scaledTime2 * scaledTime2 ) + 0.75;
+
+	    } else if( scaledTime < ( 2.5 / 2.75 ) ) {
+
+	        const scaledTime2 = scaledTime - ( 2.25 / 2.75 );
+	        return ( 7.5625 * scaledTime2 * scaledTime2 ) + 0.9375;
+
+	    } else {
+
+	        const scaledTime2 = scaledTime - ( 2.625 / 2.75 );
+	        return ( 7.5625 * scaledTime2 * scaledTime2 ) + 0.984375;
+
+	    }
+
+	},
+
+	// Bounce increasing in velocity until completion
+	easeInBounce: function ( t ) {
+	    return 1 - Tweens.easeOutBounce( 1 - t );
+	},
+
+	// Bounce in and bounce out
+	easeInOutBounce: function ( t ) {
+
+	    if( t < 0.5 ) {
+
+	        return Tweens.easeInBounce( t * 2 ) * 0.5;
+
+	    }
+
+	    return ( Tweens.easeOutBounce( ( t * 2 ) - 1 ) * 0.5 ) + 0.5;
+
+	}
+};
 </script>
 </body>
 </html>
