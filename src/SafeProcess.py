@@ -44,7 +44,7 @@ class SafeProcess (Process):
         self._tid += 1
         targetT = time() + t
         self._timers.append([tid, targetT])
-        self.addCallback("timer" + str(tid), f)
+        self.registerHandler("timer" + str(tid), f)
         return tid
 
     def _checkTimers(self):
@@ -66,10 +66,10 @@ class SafeProcess (Process):
             for callback in self._callbacks[event]:
                 callback(*args)
 
-    def addCallback(self, event, callback):
-        if event not in self._callbacks:
-            self._callbacks[event] = []
-        self._callbacks[event].append(callback)
+    def registerHandler(self, src, callback):
+        if src not in self._callbacks:
+            self._callbacks[src] = []
+        self._callbacks[src].append(callback)
 
     def _deleteEvent(self, event):
         if event in self._callbacks:
@@ -105,9 +105,6 @@ class SafeProcess (Process):
     def onExit(self):
         pass
 
-    def onMessage(self, msg):
-        pass
-
 
 if __name__ == '__main__':
 
@@ -130,10 +127,6 @@ if __name__ == '__main__':
             print("loop-delay2")
             # delay 0.4 秒
             self.delay(0.4)
-
-        def onMessage(self, msg):
-            # 当某进程给本进程发送消息时，onMessage 会自动被调用
-            print("onMessage:", msg)
 
         def onExit(self):
             # 当本进程即将结束时，onExit 会自动被调用
