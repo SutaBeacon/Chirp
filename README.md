@@ -10,12 +10,14 @@
 
 ```python
 # 从外部向 InteractionController 发送一条消息 msg
+# 用例：interactionController.message(msg)
 def message(self, msg):
     if msg['src'] in self._handlers:
         self._handlers[msg['src']](msg)
     self._interactions.notify(msg)
 
 # 从 InteractionController 内部向目的地 dest 发送一条消息 msg
+# 用例：self.send('face', msg)
 def send(self, dest, msg):
     cmd = {
         "dest": dest,
@@ -24,6 +26,7 @@ def send(self, dest, msg):
     self.commands.put(cmd)
 
 # 将函数 handler 注册为用于处理来自 src 的消息的处理函数
+# 用例：self.registerHandler('midis', self.onMidi)
 def registerHandler(self, src, handler):
     self._handlers[src] = handler
 ```
@@ -31,6 +34,9 @@ def registerHandler(self, src, handler):
 
 ```python
 # 添加一个 Interaction 到队列末尾等待执行
+# 返回值是添加成功的 Interaction 的 id，可以留作以后取消用
+# 注意：interaction 应当是一个类，不要提前把它实例化！
+# 用例：id = interactionQueue.add(SomeInteraction)
 def add(self, interaction):
     if not self._isInteraction(interaction):
         error("Item pushed onto InteractionQueue is not an Interaction!")
@@ -40,11 +46,13 @@ def add(self, interaction):
     return _id
 
 # 取消标号为 id 的 Interaction
+# 用例：interactionQueue.cancel(12)
 def cancel(self, id):
         _id = next((x for x in self._interactions if x[0] == id), None)
         del self._interactions[_id]
 
 # 跳过当前正在执行的 Interaction
+# 用例：interactionQueue.skip()
 def skip(self):
     if self._current is not None and self._current.is_alive():
         self._current.terminate()
@@ -53,6 +61,7 @@ def skip(self):
     self.running.clear()
 
 # 清空所有队列上的 Interacton
+# 用例：interactionQueue.clear()
 def clear(self):
     if self._current is not None and self._current.is_alive():
         self._current.terminate()
@@ -66,10 +75,12 @@ def clear(self):
     self.running.clear()
 
 # 当前队列是否是空的
+# 用例：if interactionQueue.isEmpty():
 def isEmpty(self):
     return len(self._interactions) == 0
 
 # 向当前正在执行的 Interaction 发送消息 msg
+# 用例：interactionQueue.notify(msg)
 def notify(self, msg):
     if self._current is not None and self._current.is_alive():
         self._current.message(msg)
@@ -78,6 +89,7 @@ def notify(self, msg):
 
 ```python
 # 设一个闹钟，t 秒之后触发，触发时调用函数 f
+# 用例：self.setAlarm(1.0, self.onAlarm)
 def setAlarm(self, t, f):
         tid = self._tid
         self._tid += 1
@@ -87,20 +99,24 @@ def setAlarm(self, t, f):
         return tid
 
 # 将函数 callback 注册为用于处理来自 src 的消息的处理函数
+# 用例：self.registerHandler('midi', self.onMidi)
 def registerHandler(self, src, callback):
     if src not in self._callbacks:
         self._callbacks[src] = []
     self._callbacks[src].append(callback)
 
 # 结束这个 Interaction
+# 用例：self.terminate() 或者 interaction.terminate()
 def terminate(self):
     self._term.set()
 
 # 从外部给这个 Interaction 发送一条消息
+# 用例：interaction.message(msg)
 def message(self, msg):
     self._messages.put(msg)
 
 # 从内部给目的地 dest 发送一条消息
+# 用例：self.send('face', msg)
 def send(self, dest, msg):
     cmd = {
         "dest": dest,
@@ -109,6 +125,7 @@ def send(self, dest, msg):
     self.commands.put(cmd)
 
 # 等待 t 秒。注意！在这个期间，当前 Interaction 会被完全阻塞，无法处理任何消息
+# 用例：self.delay(1.0)
 def delay(self, t):
     targetTime = time() + t
     while time() < targetTime:
