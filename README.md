@@ -26,7 +26,7 @@ def send(self, dest, msg):
     self.commands.put(cmd)
 
 # 将函数 handler 注册为用于处理来自 src 的消息的处理函数
-# 用例：self.registerHandler('midis', self.onMidi)
+# 用例：self.registerHandler('midi', self.onMidi)
 def registerHandler(self, src, handler):
     self._handlers[src] = handler
 ```
