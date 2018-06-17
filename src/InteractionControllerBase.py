@@ -17,7 +17,8 @@ class InteractionControllerBase ():
         self.setup()
 
     def message(self, msg):
-        self._handlers[msg['src']](msg)
+        if msg['src'] in self._handlers:
+            self._handlers[msg['src']](msg)
         self._interactions.notify(msg)
 
     def send(self, dest, msg):
