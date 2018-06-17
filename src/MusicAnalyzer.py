@@ -1,7 +1,7 @@
 from textdistance import jaccard
 from queue import Queue
 
-from data.phrases import Phrases
+from data.phrases import Commands
 
 
 def similarity(phrase1, phrase2):
@@ -15,7 +15,7 @@ def similarity(phrase1, phrase2):
 
 
 def predict(phrase):
-    ph = Phrases[:]
+    ph = Commands[:]
     ph.sort(key=lambda x: similarity(x[1], phrase))
     return (ph[-1], similarity(ph[-1][1], phrase))
 

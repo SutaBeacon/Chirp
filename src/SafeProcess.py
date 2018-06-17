@@ -82,11 +82,8 @@ class SafeProcess (Process):
         self._messages.put(msg)
 
     def send(self, dest, msg):
-        cmd = {
-            "dest": dest,
-            "content": json.dumps(msg)
-        }
-        self.commands.put(cmd)
+        msg['dest'] = dest
+        self.commands.put(msg)
 
     def event(self, event, *args):
         self._triggerEvent(event, *args)

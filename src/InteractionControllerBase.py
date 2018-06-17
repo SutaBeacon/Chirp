@@ -22,11 +22,8 @@ class InteractionControllerBase ():
         self.interactionQueue.notify(msg)
 
     def send(self, dest, msg):
-        cmd = {
-            "dest": dest,
-            "content": json.dumps(msg)
-        }
-        self.commands.put(cmd)
+        msg['dest'] = dest
+        self.commands.put(msg)
 
     def registerHandler(self, src, handler):
         self._handlers[src] = handler

@@ -30,6 +30,7 @@ httpServer.start()
 interactionController = InteractionController()
 
 midiIn = None
+midiOut = None
 noteGrouper = NoteGrouper()
 phraseCutter = PhraseCutter()
 
@@ -38,15 +39,18 @@ while not wsInServer.ready.is_set() and not wsFaceServer.ready.is_set() and not 
     pass
 normal("Starting browser window...")
 subprocess.call(["open", httpServer.address.get()])  # open player
-subprocess.call(["open", httpServer.address.get()])  # open controller
+# subprocess.call(["open", httpServer.address.get()])  # open controller
 
 
 for i in range(midi.get_count()):
     if "SAMSON Graphite 25 Port1" in str(midi.get_device_info(i)[1]):
         midiIn = midi.Input(i)
-        break
+    if "FluidSynth virtual port" in str(midi.get_device_info(i)[1]):
+        midiOut = midi.Output(i, latency=1)
 if midiIn is None:
     error("CANNOT FIND PIANO!")
+if midiOut is None:
+    error("I CAN'T SING!")
 
 
 def CheckWebsocketEvents(interactionController):
@@ -110,9 +114,21 @@ def DispatchCommands(interactionController):
 
     def _dispatch(cmd):
         if cmd['dest'] == 'face':
-            wsFaceCommands.put(cmd['content'])
+            wsFaceCommands.put(json.dumps(cmd))
         elif cmd['dest'] == 'controller':
-            wsControllerCommands.put(cmd['content'])
+            wsControllerCommands.put(json.dumps(cmd))
+        elif cmd['dest'] == 'midi':
+            if cmd['cmd'] == 'instrument':
+                midiOut.set_instrument(cmd['id'])
+            elif cmd['cmd'] == 'note-on':
+                midiOut.note_on(cmd['note'], velocity=cmd['velocity'])
+            elif cmd['cmd'] == 'note-off':
+                midiOut.note_off(cmd['note'])
+            elif cmd['cmd'] == 'write':
+                t = midi.time()
+                for note in cmd['notes']:
+                    note[1] += t
+                midiOut.write(cmd['notes'])
 
     while True:
         try:
@@ -147,6 +163,7 @@ try:
 
 except KeyboardInterrupt:
     midiIn.close()
+    midiOut.close()
     midi.quit()
     wsInServer.join()
     wsFaceServer.join()
