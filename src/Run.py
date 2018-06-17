@@ -1,4 +1,3 @@
-import sys
 import json
 import subprocess
 from queue import Empty
@@ -107,7 +106,6 @@ def CheckMIDIEvents(interactionController):
             break
 
 
-
 def DispatchCommands(interactionController):
 
     def _dispatch(cmd):
@@ -122,6 +120,7 @@ def DispatchCommands(interactionController):
             _dispatch(cmd)
         except Empty:
             break
+
 
 sleep(1)
 

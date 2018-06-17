@@ -244,3 +244,9 @@ cmd = {
     "id": 1
 }
 ```
+```json
+cmd = {
+    "cmd": "face-load",
+    "filenames": ["Happy.json", "Grumpy.json", "..."]
+}
+```
