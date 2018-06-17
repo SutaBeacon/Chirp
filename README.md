@@ -14,7 +14,7 @@
 def message(self, msg):
     if msg['src'] in self._handlers:
         self._handlers[msg['src']](msg)
-    self._interactions.notify(msg)
+    self.interactionsQueue.notify(msg)
 
 # 从 InteractionController 内部向目的地 dest 发送一条消息 msg
 # 用例：self.send('face', msg)
@@ -42,14 +42,14 @@ def add(self, interaction):
         error("Item pushed onto InteractionQueue is not an Interaction!")
         return
     _id = self._assignID()
-    self._interactions.append((_id, interaction))
+    self.interactionsQueue.append((_id, interaction))
     return _id
 
 # 取消标号为 id 的 Interaction
 # 用例：interactionQueue.cancel(12)
 def cancel(self, id):
-        _id = next((x for x in self._interactions if x[0] == id), None)
-        del self._interactions[_id]
+        _id = next((x for x in self.interactionsQueue if x[0] == id), None)
+        del self.interactionsQueue[_id]
 
 # 跳过当前正在执行的 Interaction
 # 用例：interactionQueue.skip()
@@ -69,7 +69,7 @@ def clear(self):
         self._current = None
         while True:
             try:
-                self._interactions.get(False)
+                self.interactionsQueue.get(False)
             except Empty:
                 break
     self.running.clear()
@@ -77,7 +77,7 @@ def clear(self):
 # 当前队列是否是空的
 # 用例：if interactionQueue.isEmpty():
 def isEmpty(self):
-    return len(self._interactions) == 0
+    return len(self.interactionsQueue) == 0
 
 # 向当前正在执行的 Interaction 发送消息 msg
 # 用例：interactionQueue.notify(msg)
