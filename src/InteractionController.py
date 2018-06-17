@@ -7,7 +7,7 @@ from MusicAnalyzer import similarity, predict
 class TestInteraction1(Interaction):
 
     def setup(self):
-        self.addCallback('websocket', self.onWebSocket)
+        self.registerHandler('websocket', self.onWebSocket)
 
     def loop(self):
         pass
@@ -26,6 +26,7 @@ class InteractionController (InteractionControllerBase):
     def setup(self):
         self.registerHandler('websocket', self.onWebsocket)
         self.registerHandler('midi', self.onMidi)
+        self.interactionQueue.add(TestInteraction1)
 
     def loop(self):
         pass
