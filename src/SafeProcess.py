@@ -117,7 +117,8 @@ if __name__ == '__main__':
             # 会在进程开始时运行一次
             print("setup")
             # 设一个一秒钟之后触发的 alarm，触发时调用 testAlarm
-            self.setAlarm(1.0, self.testAlarm)
+            self.setAlarm(1.5, self.testAlarm)
+            self.registerHandler('midi', self.onMidi)
 
         def loop(self):
             # 会在进程运行过程中不断重复被调用
@@ -132,10 +133,18 @@ if __name__ == '__main__':
             # 当本进程即将结束时，onExit 会自动被调用
             print("onExit")
 
+        def onMidi(self, msg):
+            print(msg)
+
     p = TestProcess()
     p.start()
     sleep(1)
-    p.message("hello!")
+    p.message({
+        'src': 'midi',
+        'cmd': 'note-on',
+        'note': 64,
+        'time': 1239
+    })
     sleep(2)
     p.terminate()
     p.join()
