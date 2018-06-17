@@ -3,7 +3,19 @@ from SafeProcess import SafeProcess
 
 class Interaction(SafeProcess):
 
-    def note(self, note, length, velocity=127, callback=None):
+    def makeFace(self, id):
+        self.send("face", {
+            "cmd": "face-change",
+            "id": id
+        })
+
+    def setInstrument(self, instrument=73):
+        self.send("midi", {
+            "cmd": "instrument",
+            "id": instrument
+        })
+
+    def makeNote(self, note, length, velocity=127, callback=None):
         def cb(t):
             self.send("midi", {
                 "cmd": "note-off",
