@@ -153,53 +153,20 @@ def predict(phrase):
 ### 1.5	ConsoleLog
 
 ```python
+# 白色字
 def normal(*args, **kwargs):
-    lock.acquire()
-    try:
-        print(Style.RESET_ALL + _getTimeLabel() + ' ', end='')
-        print(*args, **kwargs)
-    finally:
-        lock.release()
 
-
+# 红色字
 def error(*args, **kwargs):
-    lock.acquire()
-    try:
-        print(Fore.RED + _getTimeLabel(), end='')
-        print(" ERROR: ", end='')
-        print(*args, **kwargs)
-    finally:
-        lock.release()
 
-
+# 绿色字
 def success(*args, **kwargs):
-    lock.acquire()
-    try:
-        print(Fore.GREEN + _getTimeLabel(), end='')
-        print(' SUCCESS: ', end='')
-        print(*args, **kwargs)
-    finally:
-        lock.release()
 
-
+# 黄色字
 def warning(*args, **kwargs):
-    lock.acquire()
-    try:
-        print(Fore.YELLOW + _getTimeLabel(), end='')
-        print(' WARNING: ', end='')
-        print(*args, **kwargs)
-    finally:
-        lock.release()
 
-
+# 青色字
 def notice(*args, **kwargs):
-    lock.acquire()
-    try:
-        print(Fore.LIGHTCYAN_EX + _getTimeLabel(), end='')
-        print(' ', end='')
-        print(*args, **kwargs)
-    finally:
-        lock.release()
 ```
 
 
@@ -260,4 +227,20 @@ midi_evt = {
 }
 ```
 
-## 3.  发送事件消息
+## 3.  发送命令
+### 3.1 基础结构
+```json
+cmd = {
+    "dest": "命令目的地，如 'face', 'controller'",
+    "cmd": "指令码，根据来源不同指令码会有不同",
+    "...": "根据指令码不同，每个事件消息包会附带更多补充信息"
+}
+```
+### 3.2 脸部动画命令
+```json
+cmd = {
+    "dest": "face",
+    "cmd": "face-change",
+    "id": 1
+}
+```
