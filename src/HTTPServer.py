@@ -2,7 +2,7 @@ import http.server
 import socketserver
 from multiprocessing import Process, Queue
 
-from ConsoleLog import normal, error
+from ConsoleLog import normal, error, success
 
 
 class HTTPServer(Process):
@@ -18,7 +18,7 @@ class HTTPServer(Process):
         while True:
             try:
                 httpd = socketserver.TCPServer(('', self.PORT), self.handler)
-                normal("HTTP server started at port", self.PORT)
+                success("HTTP server started at port", self.PORT)
                 try:
                     self.address.put("http://127.0.0.1:" + str(self.PORT) + "/static/face")
                     self.address.put("http://127.0.0.1:" + str(self.PORT) + "/static/controller")
