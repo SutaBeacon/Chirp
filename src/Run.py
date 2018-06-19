@@ -68,7 +68,7 @@ def CheckSerialEvents(interactionController):
 
 
 def CheckMIDIEvents(interactionController):
-    if midiIn.poll():
+    if midiIn and midiIn.poll():
         _data = midiIn.read(1)[0]
         _time = _data[1]
         _event = _data[0][0]
@@ -114,10 +114,16 @@ def DispatchCommands(interactionController):
 
     def _dispatch(cmd):
         if cmd['dest'] == 'face':
+            if cmd['cmd'] == 'face-change':
+                try:
+                    _id = animations.index(cmd['id'])
+                    cmd['id'] = _id
+                except ValueError:
+                    error("Cannot find animation \"" + cmd['id'] + "\"")
             wsFaceCommands.put(json.dumps(cmd))
         elif cmd['dest'] == 'controller':
             wsControllerCommands.put(json.dumps(cmd))
-        elif cmd['dest'] == 'midi':
+        elif cmd['dest'] == 'midi' and midiOut:
             if cmd['cmd'] == 'instrument':
                 midiOut.set_instrument(cmd['id'])
             elif cmd['cmd'] == 'note-on':
@@ -162,8 +168,10 @@ try:
         interactionController.mainloop()
 
 except KeyboardInterrupt:
-    midiIn.close()
-    midiOut.close()
+    if midiIn:
+        midiIn.close()
+    if midiOut:
+        midiOut.close()
     midi.quit()
     wsInServer.join()
     wsFaceServer.join()

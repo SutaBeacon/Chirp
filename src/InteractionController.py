@@ -1,16 +1,16 @@
 from InteractionControllerBase import InteractionControllerBase
 
-from interactions.Curious import Curious
+from interactions.Sleepy import Sleepy
 
 
 class InteractionController (InteractionControllerBase):
 
     def setup(self):
         self.registerHandler('websocket', self.onWebsocket)
+        self.interactionQueue.add(Sleepy)
 
     def loop(self):
-        if self.interactionQueue.isEmpty():
-            self.interactionQueue.add(Curious)
+        pass
 
     def onWebsocket(self, msg):
         if msg['cmd'] == 'interaction':

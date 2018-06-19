@@ -1,4 +1,5 @@
 from textdistance import jaccard
+# TODO: choose another algorithm
 from queue import Queue
 
 from data.phrases import Commands

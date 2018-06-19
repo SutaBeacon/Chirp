@@ -3,10 +3,10 @@ from SafeProcess import SafeProcess
 
 class Interaction(SafeProcess):
 
-    def makeFace(self, id):
+    def makeFace(self, name):
         self.send("face", {
             "cmd": "face-change",
-            "id": id
+            "id": name
         })
 
     def setInstrument(self, instrument=73):
