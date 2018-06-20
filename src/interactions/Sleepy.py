@@ -1,6 +1,7 @@
 from Interaction import Interaction
 from ConsoleLog import notice
 from data.phrases import snore
+from data.phrases import wakeup
 
 
 class Sleepy(Interaction):
