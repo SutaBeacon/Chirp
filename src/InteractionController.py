@@ -7,7 +7,7 @@ class InteractionController (InteractionControllerBase):
 
     def setup(self):
         self.registerHandler('websocket', self.onWebsocket)
-        self.interactionQueue.add(Sleepy)
+        # self.interactionQueue.add(Sleepy)
 
     def loop(self):
         pass
