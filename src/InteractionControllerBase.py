@@ -49,3 +49,9 @@ class InteractionControllerBase ():
 
     def onExit(self):
         pass
+
+    def setup(self):
+        pass
+
+    def loop(self):
+        pass

@@ -88,6 +88,44 @@ def notify(self, msg):
 ### 1.3	Interaction
 
 ```python
+# 做一个表情。完成时会发送 websocket 消息，cmd = 'face-finish'
+# 用例：self.makeFace("Happy.json")
+#
+# def onWebSocket(self, msg):
+#     if msg['cmd'] == 'face-finish':
+#         print("Face animation finished:", msg['id'])
+def makeFace(self, name):
+    self.send("face", {
+        "cmd": "face-change",
+        "id": name
+    })
+
+# 设定乐器
+# 用例：self.setInstrument(73)
+def setInstrument(self, instrument=73):
+    self.send("midi", {
+        "cmd": "instrument",
+        "id": instrument
+    })
+
+# 唱一个音符 note，时长为 length，音量 velocity。并在结束时调用 callback 函数
+def makeNote(self, note, length, velocity=127, callback=None):
+    def cb(t):
+        self.send("midi", {
+            "cmd": "note-off",
+            "note": note
+        })
+        if callback:
+            callback()
+
+    self.send("midi", {
+        "cmd": "note-on",
+        "note": note,
+        "velocity": velocity
+    })
+
+    self.setAlarm(length, cb)
+
 # 设一个闹钟，t 秒之后触发，触发时调用函数 f
 # 用例：self.setAlarm(1.0, self.onAlarm)
 def setAlarm(self, t, f):
@@ -265,5 +303,21 @@ cmd = {
 cmd = {
     "cmd": "face-load",
     "filenames": ["Happy.json", "Grumpy.json", "..."]
+}
+```
+### 3.3 MIDI播放命令
+```json
+cmd = {
+    "dest": "midi",
+    "cmd": "note-on",
+    "note": "音符",
+    "velocity": "音量"
+}
+```
+```json
+cmd = {
+    "dest": "midi",
+    "cmd": "note-off",
+    "note": "音符"
 }
 ```

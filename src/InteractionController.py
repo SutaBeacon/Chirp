@@ -1,5 +1,5 @@
 from InteractionControllerBase import InteractionControllerBase
-
+from ConsoleLog import normal
 from interactions.Sleepy import Sleepy
 
 
@@ -18,3 +18,5 @@ class InteractionController (InteractionControllerBase):
                 "cmd": "face-change",
                 "id": msg["id"]
             })
+        elif msg['cmd'] == 'face-finished':
+            normal(msg['id'])

@@ -48,7 +48,7 @@ class SafeProcess (Process):
         return tid
 
     def _checkTimers(self):
-        for i, timer in enumerate(self._timers):
+        for timer in self._timers:
             if time() >= timer[1]:
                 self._triggerEvent("timer" + str(timer[0]), time())
                 self._deleteEvent("timer" + str(timer[0]))

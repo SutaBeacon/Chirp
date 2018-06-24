@@ -15,7 +15,7 @@
     </head>
     <body>
         <script src="materialize/js/materialize.min.js"></script>
-        <h3 class="header">Interactions</h3>
+        <h3 class="header">Animations</h3>
         <div class="collection" id="interactions">
         </div>
 
@@ -34,7 +34,7 @@
                     //console.log(fileNames);
 
                     for (var i=0; i<fileNames.length; i++) {
-                        $("#interactions").append("<a href=\"#!\" class=\"collection-item\" id=\"interaction-" + i + "\" value=\"" + i + "\">#" + i + ": " + fileNames[i] + "</a>")
+                        $("#interactions").append("<a href=\"#!\" class=\"collection-item\" id=\"interaction-" + i + "\" value=\"" + fileNames[i] + "\">#" + i + ": " + fileNames[i] + "</a>")
 
                         $("#interaction-" + i).click(function (e) {
                             wsOut.send(JSON.stringify({
