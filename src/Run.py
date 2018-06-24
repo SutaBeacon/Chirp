@@ -39,7 +39,7 @@ while not wsInServer.ready.is_set() and not wsFaceServer.ready.is_set() and not 
     pass
 normal("Starting browser window...")
 subprocess.call(["open", httpServer.address.get()])  # open player
-# subprocess.call(["open", httpServer.address.get()])  # open controller
+subprocess.call(["open", httpServer.address.get()])  # open controller
 
 
 for i in range(midi.get_count()):

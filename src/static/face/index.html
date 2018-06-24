@@ -270,7 +270,10 @@ window.onload = function() {
 					if (keys.end) {
 						var _interp = keys.start.tween;
 						//console.log(currentTime - keys[0].time, _totalTime, Tweens[_interp](currentTime - keys[0].time / _totalTime));
-						shapes[i].interpolate(keys.start.shape, keys.end.shape, Tweens[_interp](keys.value));
+						console.log(_interp);
+						if (_interp) {
+							shapes[i].interpolate(keys.start.shape, keys.end.shape, Tweens[_interp](keys.value));
+						}
 					} else {
 						playing = false;
 						wsOut.send(JSON.stringify({
