@@ -129,6 +129,7 @@ def DispatchCommands(interactionController):
         elif cmd['dest'] == 'controller':
             wsControllerCommands.put(json.dumps(cmd))
         elif cmd['dest'] == 'midi' and midiOut:
+            return
             if cmd['cmd'] == 'instrument':
                 midiOut.set_instrument(cmd['id'])
             elif cmd['cmd'] == 'note-on':
@@ -136,7 +137,7 @@ def DispatchCommands(interactionController):
             elif cmd['cmd'] == 'note-off':
                 midiOut.note_off(cmd['note'])
             elif cmd['cmd'] == 'write':
-                t = midi.time()
+                t = 0 # midi.time()
                 for note in cmd['notes']:
                     note[1] += t
                 midiOut.write(cmd['notes'])
