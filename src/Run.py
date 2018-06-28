@@ -32,6 +32,8 @@ midiOut = rtmidi.RtMidiOut()
 noteGrouper = NoteGrouper()
 phraseCutter = PhraseCutter()
 
+midiClock = 0
+
 
 while not wsInServer.ready.is_set() and not wsFaceServer.ready.is_set() and not wsControllerServer.ready.is_set():
     pass
@@ -77,7 +79,7 @@ def CheckMIDIEvents(interactionController):
     if foundPiano:
         _data = midiIn.getMessage()
         if _data:
-            _time = _data.getTimeStamp()
+            midiClock += _data.getTimeStamp() * 1000
             _note = _data.getNoteNumber()
             _velocity = _data.getFloatVelocity()
 
@@ -93,14 +95,13 @@ def CheckMIDIEvents(interactionController):
                 'cmd': _event,
                 'note': _note,
                 'velocity': _velocity,
-                'time': _time
+                'time': midiClock
             }
-            print(evt)
-            # noteGrouper.feed(evt)
-            # phraseCutter.feed(evt)
+            noteGrouper.feed(evt)
+            phraseCutter.feed(evt)
             interactionController.message(evt)
-    # noteGrouper.update(midi.time())
-    # phraseCutter.update(midi.time())
+    noteGrouper.update(midi.time())
+    phraseCutter.update(midi.time())
     while True:
         try:
             evt = noteGrouper.messages.get(False)

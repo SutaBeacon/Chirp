@@ -7,6 +7,7 @@ class InteractionController (InteractionControllerBase):
 
     def setup(self):
         self.registerHandler('websocket', self.onWebsocket)
+        self.registerHandler('midi', self.onMidi)
         self.interactionQueue.add(InitiateGame)
         # self.setAlarm(1.0, self.test)
 
@@ -22,3 +23,6 @@ class InteractionController (InteractionControllerBase):
             })
         elif msg['cmd'] == 'face-finished':
             normal(msg['id'])
+
+    def onMidi(self, msg):
+        notice(msg)
