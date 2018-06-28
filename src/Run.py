@@ -77,7 +77,7 @@ def CheckMIDIEvents(interactionController):
     if foundPiano:
         _data = midiIn.getMessage()
         if _data:
-            # _time = _data[1]
+            _time = _data.getTimeStamp()
             _note = _data.getNoteNumber()
             _velocity = _data.getFloatVelocity()
 
@@ -93,7 +93,7 @@ def CheckMIDIEvents(interactionController):
                 'cmd': _event,
                 'note': _note,
                 'velocity': _velocity,
-                # 'time': _time
+                'time': _time
             }
             print(evt)
             # noteGrouper.feed(evt)
@@ -174,11 +174,10 @@ try:
         interactionController.mainloop()
 
 except KeyboardInterrupt:
-    if midiIn:
-        midiIn.close()
-    if midiOut:
-        midiOut.close()
-    midi.quit()
+    if foundPiano:
+        midiIn.closePort()
+    if foundSynth:
+        midiOut.closePort()
     wsInServer.join()
     wsFaceServer.join()
     wsControllerServer.join()
