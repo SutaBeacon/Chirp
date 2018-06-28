@@ -100,8 +100,8 @@ def CheckMIDIEvents(interactionController):
             noteGrouper.feed(evt)
             phraseCutter.feed(evt)
             interactionController.message(evt)
-    noteGrouper.update(midi.time())
-    phraseCutter.update(midi.time())
+    noteGrouper.update(midiClock)
+    phraseCutter.update(midiClock)
     while True:
         try:
             evt = noteGrouper.messages.get(False)
