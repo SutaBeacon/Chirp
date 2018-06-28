@@ -47,7 +47,7 @@ class InteractionQueue:
                     break
 
         if self._current is None or not self._current.is_alive():
-            iid, nextInteraction = self._getNextInteraction()
+            _, nextInteraction = self._getNextInteraction()
             if nextInteraction is not None:
                 self._current = nextInteraction()
                 self._current.start()
@@ -57,7 +57,8 @@ class InteractionQueue:
 
     def cancel(self, id):
         _id = next((x for x in self._interactions if x[0] == id), None)
-        del self._interactions[_id]
+        if _id:
+            del self._interactions[_id]
 
     def add(self, interaction):
         if not self._isInteraction(interaction):

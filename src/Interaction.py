@@ -15,7 +15,7 @@ class Interaction(SafeProcess):
             "id": instrument
         })
 
-    def makeNote(self, note, length, velocity=127, callback=None):
+    def makeNote(self, note, length, velocity=127, callback=None, after=None):
         def cb(t):
             self.send("midi", {
                 "cmd": "note-off",
@@ -23,6 +23,8 @@ class Interaction(SafeProcess):
             })
             if callback:
                 callback()
+            if after:
+                self.triggerEvent(after)
 
         self.send("midi", {
             "cmd": "note-on",
@@ -32,7 +34,7 @@ class Interaction(SafeProcess):
 
         self.setAlarm(length, cb)
 
-    def sing(self, notes, callback=None):
+    def sing(self, notes, callback=None, after=None):
         tmax = 0
         for note in notes:
             t = note[1]
@@ -44,3 +46,8 @@ class Interaction(SafeProcess):
         })
         if callback:
             self.setAlarm(tmax / 1000, callback)
+
+        if after:
+            def _cb(t):
+                self.triggerEvent(after)
+            self.setAlarm(tmax / 1000, _cb)

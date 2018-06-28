@@ -1,8 +1,9 @@
 from multiprocessing import Process, Queue, Event
 from queue import Empty
 import json
+from time import time
 
-# from ConsoleLog import normal
+from ConsoleLog import error
 from InteractionQueue import InteractionQueue
 
 
@@ -11,6 +12,38 @@ class InteractionControllerBase ():
     _messages = Queue()
     _handlers = {}
     commands = Queue()
+    _tid = 0
+    _timers = []
+
+    def setAlarm(self, t, f):
+        tid = self._tid
+        self._tid += 1
+        targetT = time() + t
+        self._timers.append([tid, targetT])
+        self.registerHandler("timer" + str(tid), f)
+        return tid
+
+    def _checkTimers(self):
+        for timer in self._timers:
+            if time() >= timer[1]:
+                self.triggerEvent("timer" + str(timer[0]), time())
+                self.deleteHandlers("timer" + str(timer[0]))
+
+    def triggerEvent(self, event, *args):
+        if event in self._handlers:
+            for callback in self._handlers[event]:
+                callback(*args)
+
+    def deleteHandlers(self, event):
+        if event in self._handlers:
+            del self._handlers[event]
+
+    def deleteHandler(self, event, handler):
+        if event in self._handlers:
+            try:
+                self._handlers[event].remove(handler)
+            except ValueError:
+                error("Handler does not exist:", handler)
 
     def __init__(self):
         self.interactionQueue = InteractionQueue()
@@ -18,7 +51,8 @@ class InteractionControllerBase ():
 
     def message(self, msg):
         if msg['src'] in self._handlers:
-            self._handlers[msg['src']](msg)
+            for handler in self._handlers[msg['src']]:
+                handler(msg)
         self.interactionQueue.notify(msg)
 
     def send(self, dest, msg):
@@ -26,7 +60,9 @@ class InteractionControllerBase ():
         self.commands.put(msg)
 
     def registerHandler(self, src, handler):
-        self._handlers[src] = handler
+        if src not in self._handlers:
+            self._handlers[src] = []
+        self._handlers[src].append(handler)
 
     def _checkMessages(self):
         while True:
@@ -37,6 +73,7 @@ class InteractionControllerBase ():
                 break
 
     def mainloop(self):
+        self._checkTimers()
         self._checkMessages()
         self.interactionQueue.update()
         self.loop()

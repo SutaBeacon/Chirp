@@ -1,0 +1,303 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Sleepy.py	../src/interactions/Sleepy.py	1;"	kind:file	line:1
+Interaction	../src/interactions/Sleepy.py	/^from Interaction import Interaction$/;"	kind:namespace	line:1
+notice	../src/interactions/Sleepy.py	/^from ConsoleLog import notice$/;"	kind:namespace	line:2
+snore	../src/interactions/Sleepy.py	/^from data.phrases import snore$/;"	kind:namespace	line:3
+wakeup	../src/interactions/Sleepy.py	/^from data.phrases import wakeup$/;"	kind:namespace	line:4
+Sleepy	../src/interactions/Sleepy.py	/^class Sleepy(Interaction):$/;"	kind:class	line:7
+setup	../src/interactions/Sleepy.py	/^    def setup(self):$/;"	kind:member	line:9
+loop	../src/interactions/Sleepy.py	/^    def loop(self):$/;"	kind:member	line:14
+onMidi	../src/interactions/Sleepy.py	/^    def onMidi(self, msg):$/;"	kind:member	line:17
+finish	../src/interactions/Sleepy.py	/^    def finish(self, t):$/;"	kind:member	line:22
+Curious.py	../src/interactions/Curious.py	1;"	kind:file	line:1
+Interaction	../src/interactions/Curious.py	/^from Interaction import Interaction$/;"	kind:namespace	line:1
+notice	../src/interactions/Curious.py	/^from ConsoleLog import notice$/;"	kind:namespace	line:2
+predict	../src/interactions/Curious.py	/^from MusicAnalyzer import predict$/;"	kind:namespace	line:3
+question	../src/interactions/Curious.py	/^from data.phrases import question$/;"	kind:namespace	line:4
+Curious	../src/interactions/Curious.py	/^class Curious(Interaction):$/;"	kind:class	line:7
+setup	../src/interactions/Curious.py	/^    def setup(self):$/;"	kind:member	line:9
+loop	../src/interactions/Curious.py	/^    def loop(self):$/;"	kind:member	line:13
+onMidi	../src/interactions/Curious.py	/^    def onMidi(self, msg):$/;"	kind:member	line:16
+finish	../src/interactions/Curious.py	/^    def finish(self, t):$/;"	kind:member	line:24
+InitiateGame.py	../src/interactions/InitiateGame.py	1;"	kind:file	line:1
+Interaction	../src/interactions/InitiateGame.py	/^from Interaction import Interaction$/;"	kind:namespace	line:1
+InitiateGame	../src/interactions/InitiateGame.py	/^class InitiateGame (Interaction):$/;"	kind:class	line:4
+Run.py	../src/Run.py	1;"	kind:file	line:1
+json	../src/Run.py	/^import json$/;"	kind:namespace	line:1
+subprocess	../src/Run.py	/^import subprocess$/;"	kind:namespace	line:2
+Empty	../src/Run.py	/^from queue import Empty$/;"	kind:namespace	line:3
+glob	../src/Run.py	/^from glob import glob$/;"	kind:namespace	line:4
+split	../src/Run.py	/^from os.path import split$/;"	kind:namespace	line:5
+sleep	../src/Run.py	/^from time import sleep$/;"	kind:namespace	line:6
+pygame	../src/Run.py	/^import pygame.midi as midi$/;"	kind:namespace	line:7
+midi	../src/Run.py	/^import pygame.midi as midi$/;"	kind:namespace	line:7
+WebSocketInServer	../src/Run.py	/^from WebSocketServer import WebSocketInServer$/;"	kind:namespace	line:9
+WebSocketFaceServer	../src/Run.py	/^from WebSocketServer import WebSocketFaceServer, WebSocketControllerServer$/;"	kind:namespace	line:10
+WebSocketControllerServer	../src/Run.py	/^from WebSocketServer import WebSocketFaceServer, WebSocketControllerServer$/;"	kind:namespace	line:10
+wsEvents	../src/Run.py	/^from WebSocketServer import wsEvents, wsFaceCommands, wsControllerCommands$/;"	kind:namespace	line:11
+wsFaceCommands	../src/Run.py	/^from WebSocketServer import wsEvents, wsFaceCommands, wsControllerCommands$/;"	kind:namespace	line:11
+wsControllerCommands	../src/Run.py	/^from WebSocketServer import wsEvents, wsFaceCommands, wsControllerCommands$/;"	kind:namespace	line:11
+HTTPServer	../src/Run.py	/^from HTTPServer import HTTPServer$/;"	kind:namespace	line:12
+normal	../src/Run.py	/^from ConsoleLog import normal, error$/;"	kind:namespace	line:13
+error	../src/Run.py	/^from ConsoleLog import normal, error$/;"	kind:namespace	line:13
+InteractionController	../src/Run.py	/^from InteractionController import InteractionController$/;"	kind:namespace	line:14
+NoteGrouper	../src/Run.py	/^from MusicAnalyzer import NoteGrouper, PhraseCutter$/;"	kind:namespace	line:15
+PhraseCutter	../src/Run.py	/^from MusicAnalyzer import NoteGrouper, PhraseCutter$/;"	kind:namespace	line:15
+wsInServer	../src/Run.py	/^wsInServer = WebSocketInServer(8000)$/;"	kind:variable	line:20
+wsFaceServer	../src/Run.py	/^wsFaceServer = WebSocketFaceServer(8001)$/;"	kind:variable	line:21
+wsControllerServer	../src/Run.py	/^wsControllerServer = WebSocketControllerServer(8002)$/;"	kind:variable	line:22
+httpServer	../src/Run.py	/^httpServer = HTTPServer(8003)$/;"	kind:variable	line:23
+interactionController	../src/Run.py	/^interactionController = InteractionController()$/;"	kind:variable	line:30
+midiIn	../src/Run.py	/^midiIn = None$/;"	kind:variable	line:32
+midiOut	../src/Run.py	/^midiOut = None$/;"	kind:variable	line:33
+noteGrouper	../src/Run.py	/^noteGrouper = NoteGrouper()$/;"	kind:variable	line:34
+phraseCutter	../src/Run.py	/^phraseCutter = PhraseCutter()$/;"	kind:variable	line:35
+midiIn	../src/Run.py	/^        midiIn = midi.Input(i)$/;"	kind:variable	line:47
+midiOut	../src/Run.py	/^        midiOut = midi.Output(i, latency=1)$/;"	kind:variable	line:49
+CheckWebsocketEvents	../src/Run.py	/^def CheckWebsocketEvents(interactionController):$/;"	kind:function	line:56
+CheckSerialEvents	../src/Run.py	/^def CheckSerialEvents(interactionController):$/;"	kind:function	line:66
+CheckMIDIEvents	../src/Run.py	/^def CheckMIDIEvents(interactionController):$/;"	kind:function	line:70
+DispatchCommands	../src/Run.py	/^def DispatchCommands(interactionController):$/;"	kind:function	line:113
+_dispatch	../src/Run.py	/^    def _dispatch(cmd):$/;"	kind:function	line:115
+animations	../src/Run.py	/^animations = glob("static\/animations\/*.json")$/;"	kind:variable	line:149
+cmd	../src/Run.py	/^cmd = {$/;"	kind:variable	line:153
+InteractionController.py	../src/InteractionController.py	1;"	kind:file	line:1
+InteractionControllerBase	../src/InteractionController.py	/^from InteractionControllerBase import InteractionControllerBase$/;"	kind:namespace	line:1
+normal	../src/InteractionController.py	/^from ConsoleLog import normal, notice$/;"	kind:namespace	line:2
+notice	../src/InteractionController.py	/^from ConsoleLog import normal, notice$/;"	kind:namespace	line:2
+Sleepy	../src/InteractionController.py	/^from interactions.Sleepy import Sleepy$/;"	kind:namespace	line:3
+InteractionController	../src/InteractionController.py	/^class InteractionController (InteractionControllerBase):$/;"	kind:class	line:6
+setup	../src/InteractionController.py	/^    def setup(self):$/;"	kind:member	line:8
+test	../src/InteractionController.py	/^    def test(self, t):$/;"	kind:member	line:13
+onWebsocket	../src/InteractionController.py	/^    def onWebsocket(self, msg):$/;"	kind:member	line:17
+SafeProcess.py	../src/SafeProcess.py	1;"	kind:file	line:1
+Process	../src/SafeProcess.py	/^from multiprocessing import Process, Event, Queue$/;"	kind:namespace	line:1
+Event	../src/SafeProcess.py	/^from multiprocessing import Process, Event, Queue$/;"	kind:namespace	line:1
+Queue	../src/SafeProcess.py	/^from multiprocessing import Process, Event, Queue$/;"	kind:namespace	line:1
+Empty	../src/SafeProcess.py	/^from queue import Empty$/;"	kind:namespace	line:2
+sleep	../src/SafeProcess.py	/^from time import sleep, time$/;"	kind:namespace	line:3
+time	../src/SafeProcess.py	/^from time import sleep, time$/;"	kind:namespace	line:3
+json	../src/SafeProcess.py	/^import json$/;"	kind:namespace	line:4
+SafeProcess	../src/SafeProcess.py	/^class SafeProcess (Process):$/;"	kind:class	line:7
+_term	../src/SafeProcess.py	/^    _term = Event()$/;"	kind:variable	line:9
+_timers	../src/SafeProcess.py	/^    _timers = []$/;"	kind:variable	line:11
+_callbacks	../src/SafeProcess.py	/^    _callbacks = {}$/;"	kind:variable	line:12
+_messages	../src/SafeProcess.py	/^    _messages = Queue()$/;"	kind:variable	line:13
+_delay	../src/SafeProcess.py	/^    _delay = False$/;"	kind:variable	line:15
+_tid	../src/SafeProcess.py	/^    _tid = 0$/;"	kind:variable	line:17
+commands	../src/SafeProcess.py	/^    commands = Queue()$/;"	kind:variable	line:19
+__init__	../src/SafeProcess.py	/^    def __init__(self):$/;"	kind:member	line:21
+_mainloop	../src/SafeProcess.py	/^    def _mainloop(self):$/;"	kind:member	line:25
+setAlarm	../src/SafeProcess.py	/^    def setAlarm(self, t, f):$/;"	kind:member	line:42
+_checkTimers	../src/SafeProcess.py	/^    def _checkTimers(self):$/;"	kind:member	line:50
+_checkMessages	../src/SafeProcess.py	/^    def _checkMessages(self):$/;"	kind:member	line:56
+_triggerEvent	../src/SafeProcess.py	/^    def _triggerEvent(self, event, *args):$/;"	kind:member	line:64
+registerHandler	../src/SafeProcess.py	/^    def registerHandler(self, src, callback):$/;"	kind:member	line:69
+_deleteEvent	../src/SafeProcess.py	/^    def _deleteEvent(self, event):$/;"	kind:member	line:74
+terminate	../src/SafeProcess.py	/^    def terminate(self):$/;"	kind:member	line:78
+message	../src/SafeProcess.py	/^    def message(self, msg):$/;"	kind:member	line:81
+send	../src/SafeProcess.py	/^    def send(self, dest, msg):$/;"	kind:member	line:84
+event	../src/SafeProcess.py	/^    def event(self, event, *args):$/;"	kind:member	line:88
+delay	../src/SafeProcess.py	/^    def delay(self, t):$/;"	kind:member	line:91
+setup	../src/SafeProcess.py	/^    def setup(self):$/;"	kind:member	line:96
+loop	../src/SafeProcess.py	/^    def loop(self):$/;"	kind:member	line:99
+onExit	../src/SafeProcess.py	/^    def onExit(self):$/;"	kind:member	line:102
+TestProcess	../src/SafeProcess.py	/^    class TestProcess (SafeProcess):$/;"	kind:class	line:108
+testAlarm	../src/SafeProcess.py	/^        def testAlarm(self, t):$/;"	kind:member	line:110
+setup	../src/SafeProcess.py	/^        def setup(self):$/;"	kind:member	line:113
+loop	../src/SafeProcess.py	/^        def loop(self):$/;"	kind:member	line:120
+onExit	../src/SafeProcess.py	/^        def onExit(self):$/;"	kind:member	line:129
+onMidi	../src/SafeProcess.py	/^        def onMidi(self, msg):$/;"	kind:member	line:133
+p	../src/SafeProcess.py	/^    p = TestProcess()$/;"	kind:variable	line:136
+ConsoleLog.py	../src/ConsoleLog.py	1;"	kind:file	line:1
+datetime	../src/ConsoleLog.py	/^import datetime$/;"	kind:namespace	line:1
+init	../src/ConsoleLog.py	/^from colorama import init, Fore, Style$/;"	kind:namespace	line:2
+Fore	../src/ConsoleLog.py	/^from colorama import init, Fore, Style$/;"	kind:namespace	line:2
+Style	../src/ConsoleLog.py	/^from colorama import init, Fore, Style$/;"	kind:namespace	line:2
+Pool	../src/ConsoleLog.py	/^from multiprocessing import Pool, Lock$/;"	kind:namespace	line:3
+Lock	../src/ConsoleLog.py	/^from multiprocessing import Pool, Lock$/;"	kind:namespace	line:3
+lock	../src/ConsoleLog.py	/^lock = Lock()$/;"	kind:variable	line:7
+_getTimeLabel	../src/ConsoleLog.py	/^def _getTimeLabel():$/;"	kind:function	line:10
+normal	../src/ConsoleLog.py	/^def normal(*args, **kwargs):$/;"	kind:function	line:14
+error	../src/ConsoleLog.py	/^def error(*args, **kwargs):$/;"	kind:function	line:23
+success	../src/ConsoleLog.py	/^def success(*args, **kwargs):$/;"	kind:function	line:33
+warning	../src/ConsoleLog.py	/^def warning(*args, **kwargs):$/;"	kind:function	line:43
+notice	../src/ConsoleLog.py	/^def notice(*args, **kwargs):$/;"	kind:function	line:53
+f	../src/ConsoleLog.py	/^    def f(x):$/;"	kind:function	line:64
+Interaction.py	../src/Interaction.py	1;"	kind:file	line:1
+SafeProcess	../src/Interaction.py	/^from SafeProcess import SafeProcess$/;"	kind:namespace	line:1
+Interaction	../src/Interaction.py	/^class Interaction(SafeProcess):$/;"	kind:class	line:4
+makeFace	../src/Interaction.py	/^    def makeFace(self, name):$/;"	kind:member	line:6
+setInstrument	../src/Interaction.py	/^    def setInstrument(self, instrument=73):$/;"	kind:member	line:12
+makeNote	../src/Interaction.py	/^    def makeNote(self, note, length, velocity=127, callback=None):$/;"	kind:member	line:18
+cb	../src/Interaction.py	/^        def cb(t):$/;"	kind:function	line:19
+sing	../src/Interaction.py	/^    def sing(self, notes, callback=None):$/;"	kind:member	line:35
+SerialServer.py	../src/SerialServer.py	1;"	kind:file	line:1
+serial	../src/SerialServer.py	/^import serial$/;"	kind:namespace	line:1
+comports	../src/SerialServer.py	/^from serial.tools.list_ports import comports$/;"	kind:namespace	line:2
+Thread	../src/SerialServer.py	/^from threading import Thread, Event$/;"	kind:namespace	line:3
+Event	../src/SerialServer.py	/^from threading import Thread, Event$/;"	kind:namespace	line:3
+Process	../src/SerialServer.py	/^from multiprocessing import Process, Queue$/;"	kind:namespace	line:5
+Queue	../src/SerialServer.py	/^from multiprocessing import Process, Queue$/;"	kind:namespace	line:5
+normal	../src/SerialServer.py	/^from ConsoleLog import normal, error$/;"	kind:namespace	line:6
+error	../src/SerialServer.py	/^from ConsoleLog import normal, error$/;"	kind:namespace	line:6
+IncomingSerial	../src/SerialServer.py	/^class IncomingSerial (Thread):$/;"	kind:class	line:9
+__init__	../src/SerialServer.py	/^    def __init__(self, port, queue):$/;"	kind:member	line:11
+_mainloop	../src/SerialServer.py	/^    def _mainloop(self):$/;"	kind:member	line:17
+SerialServer	../src/SerialServer.py	/^class SerialServer (Process):$/;"	kind:class	line:24
+messages	../src/SerialServer.py	/^    messages = Queue()$/;"	kind:variable	line:26
+commands	../src/SerialServer.py	/^    commands = Queue()$/;"	kind:variable	line:27
+port	../src/SerialServer.py	/^    port = None$/;"	kind:variable	line:28
+__init__	../src/SerialServer.py	/^    def __init__(self, port=None):$/;"	kind:member	line:30
+_mainloop	../src/SerialServer.py	/^    def _mainloop(self):$/;"	kind:member	line:52
+message	../src/SerialServer.py	/^    def message(self, msg):$/;"	kind:member	line:68
+ss	../src/SerialServer.py	/^    ss = SerialServer()$/;"	kind:variable	line:74
+AudioServer.py	../src/AudioServer.py	1;"	kind:file	line:1
+pyaudio	../src/AudioServer.py	/^import pyaudio$/;"	kind:namespace	line:1
+np	../src/AudioServer.py	/^import numpy as np$/;"	kind:namespace	line:2
+aubio	../src/AudioServer.py	/^import aubio$/;"	kind:namespace	line:3
+SafeProcess	../src/AudioServer.py	/^from SafeProcess import SafeProcess$/;"	kind:namespace	line:5
+AudioServer	../src/AudioServer.py	/^class AudioServer(SafeProcess):$/;"	kind:class	line:8
+buffer_size	../src/AudioServer.py	/^    buffer_size = 1024$/;"	kind:variable	line:10
+pyaudio_format	../src/AudioServer.py	/^    pyaudio_format = pyaudio.paFloat32$/;"	kind:variable	line:11
+n_channels	../src/AudioServer.py	/^    n_channels = 1$/;"	kind:variable	line:12
+samplerate	../src/AudioServer.py	/^    samplerate = 44100$/;"	kind:variable	line:13
+outputsink	../src/AudioServer.py	/^    outputsink = None$/;"	kind:variable	line:14
+record_duration	../src/AudioServer.py	/^    record_duration = None$/;"	kind:variable	line:15
+tolerance	../src/AudioServer.py	/^    tolerance = 0.8$/;"	kind:variable	line:17
+win_s	../src/AudioServer.py	/^    win_s = 4096  # fft size$/;"	kind:variable	line:18
+hop_s	../src/AudioServer.py	/^    hop_s = buffer_size  # hop size$/;"	kind:variable	line:19
+setup	../src/AudioServer.py	/^    def setup(self):$/;"	kind:member	line:21
+loop	../src/AudioServer.py	/^    def loop(self):$/;"	kind:member	line:34
+onExit	../src/AudioServer.py	/^    def onExit(self):$/;"	kind:member	line:48
+audioServer	../src/AudioServer.py	/^    audioServer = AudioServer()$/;"	kind:variable	line:56
+HTTPServer.py	../src/HTTPServer.py	1;"	kind:file	line:1
+http	../src/HTTPServer.py	/^import http.server$/;"	kind:namespace	line:1
+server	../src/HTTPServer.py	/^import http.server$/;"	kind:namespace	line:1
+socketserver	../src/HTTPServer.py	/^import socketserver$/;"	kind:namespace	line:2
+Process	../src/HTTPServer.py	/^from multiprocessing import Process, Queue$/;"	kind:namespace	line:3
+Queue	../src/HTTPServer.py	/^from multiprocessing import Process, Queue$/;"	kind:namespace	line:3
+normal	../src/HTTPServer.py	/^from ConsoleLog import normal, error, success$/;"	kind:namespace	line:5
+error	../src/HTTPServer.py	/^from ConsoleLog import normal, error, success$/;"	kind:namespace	line:5
+success	../src/HTTPServer.py	/^from ConsoleLog import normal, error, success$/;"	kind:namespace	line:5
+HTTPServer	../src/HTTPServer.py	/^class HTTPServer(Process):$/;"	kind:class	line:8
+address	../src/HTTPServer.py	/^    address = Queue()$/;"	kind:variable	line:10
+__init__	../src/HTTPServer.py	/^    def __init__(self, port):$/;"	kind:member	line:12
+run	../src/HTTPServer.py	/^    def run(self):$/;"	kind:member	line:17
+server	../src/HTTPServer.py	/^    server = HTTPServer(8001)$/;"	kind:variable	line:39
+InteractionControllerBase.py	../src/InteractionControllerBase.py	1;"	kind:file	line:1
+Process	../src/InteractionControllerBase.py	/^from multiprocessing import Process, Queue, Event$/;"	kind:namespace	line:1
+Queue	../src/InteractionControllerBase.py	/^from multiprocessing import Process, Queue, Event$/;"	kind:namespace	line:1
+Event	../src/InteractionControllerBase.py	/^from multiprocessing import Process, Queue, Event$/;"	kind:namespace	line:1
+Empty	../src/InteractionControllerBase.py	/^from queue import Empty$/;"	kind:namespace	line:2
+json	../src/InteractionControllerBase.py	/^import json$/;"	kind:namespace	line:3
+time	../src/InteractionControllerBase.py	/^from time import time$/;"	kind:namespace	line:4
+error	../src/InteractionControllerBase.py	/^from ConsoleLog import error$/;"	kind:namespace	line:6
+InteractionQueue	../src/InteractionControllerBase.py	/^from InteractionQueue import InteractionQueue$/;"	kind:namespace	line:7
+InteractionControllerBase	../src/InteractionControllerBase.py	/^class InteractionControllerBase ():$/;"	kind:class	line:10
+_messages	../src/InteractionControllerBase.py	/^    _messages = Queue()$/;"	kind:variable	line:12
+_handlers	../src/InteractionControllerBase.py	/^    _handlers = {}$/;"	kind:variable	line:13
+commands	../src/InteractionControllerBase.py	/^    commands = Queue()$/;"	kind:variable	line:14
+_tid	../src/InteractionControllerBase.py	/^    _tid = 0$/;"	kind:variable	line:15
+_timers	../src/InteractionControllerBase.py	/^    _timers = []$/;"	kind:variable	line:16
+setAlarm	../src/InteractionControllerBase.py	/^    def setAlarm(self, t, f):$/;"	kind:member	line:18
+_checkTimers	../src/InteractionControllerBase.py	/^    def _checkTimers(self):$/;"	kind:member	line:26
+_triggerEvent	../src/InteractionControllerBase.py	/^    def _triggerEvent(self, event, *args):$/;"	kind:member	line:32
+deleteHandlers	../src/InteractionControllerBase.py	/^    def deleteHandlers(self, event):$/;"	kind:member	line:37
+deleteHandler	../src/InteractionControllerBase.py	/^    def deleteHandler(self, event, handler):$/;"	kind:member	line:41
+__init__	../src/InteractionControllerBase.py	/^    def __init__(self):$/;"	kind:member	line:48
+message	../src/InteractionControllerBase.py	/^    def message(self, msg):$/;"	kind:member	line:52
+send	../src/InteractionControllerBase.py	/^    def send(self, dest, msg):$/;"	kind:member	line:58
+registerHandler	../src/InteractionControllerBase.py	/^    def registerHandler(self, src, handler):$/;"	kind:member	line:62
+_checkMessages	../src/InteractionControllerBase.py	/^    def _checkMessages(self):$/;"	kind:member	line:67
+mainloop	../src/InteractionControllerBase.py	/^    def mainloop(self):$/;"	kind:member	line:75
+terminate	../src/InteractionControllerBase.py	/^    def terminate(self):$/;"	kind:member	line:81
+onExit	../src/InteractionControllerBase.py	/^    def onExit(self):$/;"	kind:member	line:87
+setup	../src/InteractionControllerBase.py	/^    def setup(self):$/;"	kind:member	line:90
+loop	../src/InteractionControllerBase.py	/^    def loop(self):$/;"	kind:member	line:93
+MusicAnalyzer.py	../src/MusicAnalyzer.py	1;"	kind:file	line:1
+jaccard	../src/MusicAnalyzer.py	/^from textdistance import jaccard$/;"	kind:namespace	line:1
+Queue	../src/MusicAnalyzer.py	/^from queue import Queue$/;"	kind:namespace	line:3
+Commands	../src/MusicAnalyzer.py	/^from data.phrases import Commands$/;"	kind:namespace	line:5
+similarity	../src/MusicAnalyzer.py	/^def similarity(phrase1, phrase2):$/;"	kind:function	line:8
+predict	../src/MusicAnalyzer.py	/^def predict(phrase):$/;"	kind:function	line:18
+NoteGrouper	../src/MusicAnalyzer.py	/^class NoteGrouper:$/;"	kind:class	line:24
+notes	../src/MusicAnalyzer.py	/^    notes = []$/;"	kind:variable	line:26
+messages	../src/MusicAnalyzer.py	/^    messages = Queue()$/;"	kind:variable	line:27
+start	../src/MusicAnalyzer.py	/^    start = 0$/;"	kind:variable	line:28
+_thres	../src/MusicAnalyzer.py	/^    _thres = 50$/;"	kind:variable	line:29
+feed	../src/MusicAnalyzer.py	/^    def feed(self, note):$/;"	kind:member	line:31
+update	../src/MusicAnalyzer.py	/^    def update(self, time):$/;"	kind:member	line:51
+PhraseCutter	../src/MusicAnalyzer.py	/^class PhraseCutter:$/;"	kind:class	line:65
+notes	../src/MusicAnalyzer.py	/^    notes = []$/;"	kind:variable	line:67
+messages	../src/MusicAnalyzer.py	/^    messages = Queue()$/;"	kind:variable	line:68
+start	../src/MusicAnalyzer.py	/^    start = 0$/;"	kind:variable	line:69
+end	../src/MusicAnalyzer.py	/^    end = 0$/;"	kind:variable	line:70
+_thres	../src/MusicAnalyzer.py	/^    _thres = 400$/;"	kind:variable	line:71
+count	../src/MusicAnalyzer.py	/^    count = 0$/;"	kind:variable	line:73
+feed	../src/MusicAnalyzer.py	/^    def feed(self, note):$/;"	kind:member	line:75
+update	../src/MusicAnalyzer.py	/^    def update(self, time):$/;"	kind:member	line:115
+phrases.py	../src/data/phrases.py	1;"	kind:file	line:1
+Commands	../src/data/phrases.py	/^Commands = [$/;"	kind:variable	line:1
+question	../src/data/phrases.py	/^question = [$/;"	kind:variable	line:7
+angry	../src/data/phrases.py	/^angry = [$/;"	kind:variable	line:27
+snore	../src/data/phrases.py	/^snore = [$/;"	kind:variable	line:38
+wakeup	../src/data/phrases.py	/^wakeup = [$/;"	kind:variable	line:46
+InteractionQueue.py	../src/InteractionQueue.py	1;"	kind:file	line:1
+Queue	../src/InteractionQueue.py	/^from multiprocessing import Queue, Event$/;"	kind:namespace	line:1
+Event	../src/InteractionQueue.py	/^from multiprocessing import Queue, Event$/;"	kind:namespace	line:1
+Empty	../src/InteractionQueue.py	/^from queue import Empty$/;"	kind:namespace	line:2
+normal	../src/InteractionQueue.py	/^from ConsoleLog import normal, error$/;"	kind:namespace	line:4
+error	../src/InteractionQueue.py	/^from ConsoleLog import normal, error$/;"	kind:namespace	line:4
+Interaction	../src/InteractionQueue.py	/^from Interaction import Interaction$/;"	kind:namespace	line:5
+InteractionQueue	../src/InteractionQueue.py	/^class InteractionQueue:$/;"	kind:class	line:8
+_interactions	../src/InteractionQueue.py	/^    _interactions = []$/;"	kind:variable	line:10
+_nextID	../src/InteractionQueue.py	/^    _nextID = -1$/;"	kind:variable	line:11
+_current	../src/InteractionQueue.py	/^    _current = None$/;"	kind:variable	line:12
+commands	../src/InteractionQueue.py	/^    commands = Queue()$/;"	kind:variable	line:13
+running	../src/InteractionQueue.py	/^    running = Event()$/;"	kind:variable	line:15
+__init__	../src/InteractionQueue.py	/^    def __init__(self):$/;"	kind:member	line:17
+_assignID	../src/InteractionQueue.py	/^    def _assignID(self):$/;"	kind:member	line:21
+_getNextInteraction	../src/InteractionQueue.py	/^    def _getNextInteraction(self):$/;"	kind:member	line:25
+_isInteraction	../src/InteractionQueue.py	/^    def _isInteraction(self, interaction):$/;"	kind:member	line:32
+update	../src/InteractionQueue.py	/^    def update(self):$/;"	kind:member	line:39
+cancel	../src/InteractionQueue.py	/^    def cancel(self, id):$/;"	kind:member	line:58
+add	../src/InteractionQueue.py	/^    def add(self, interaction):$/;"	kind:member	line:63
+skip	../src/InteractionQueue.py	/^    def skip(self):$/;"	kind:member	line:71
+clear	../src/InteractionQueue.py	/^    def clear(self):$/;"	kind:member	line:78
+isEmpty	../src/InteractionQueue.py	/^    def isEmpty(self):$/;"	kind:member	line:90
+notify	../src/InteractionQueue.py	/^    def notify(self, msg):$/;"	kind:member	line:93
+terminate	../src/InteractionQueue.py	/^    def terminate(self):$/;"	kind:member	line:97
+WebSocketServer.py	../src/WebSocketServer.py	1;"	kind:file	line:1
+asyncio	../src/WebSocketServer.py	/^import asyncio$/;"	kind:namespace	line:1
+websockets	../src/WebSocketServer.py	/^import websockets$/;"	kind:namespace	line:2
+Process	../src/WebSocketServer.py	/^from multiprocessing import Process, Queue, Event$/;"	kind:namespace	line:3
+Queue	../src/WebSocketServer.py	/^from multiprocessing import Process, Queue, Event$/;"	kind:namespace	line:3
+Event	../src/WebSocketServer.py	/^from multiprocessing import Process, Queue, Event$/;"	kind:namespace	line:3
+normal	../src/WebSocketServer.py	/^from ConsoleLog import normal, success, warning$/;"	kind:namespace	line:5
+success	../src/WebSocketServer.py	/^from ConsoleLog import normal, success, warning$/;"	kind:namespace	line:5
+warning	../src/WebSocketServer.py	/^from ConsoleLog import normal, success, warning$/;"	kind:namespace	line:5
+wsEvents	../src/WebSocketServer.py	/^wsEvents = Queue()$/;"	kind:variable	line:8
+wsFaceCommands	../src/WebSocketServer.py	/^wsFaceCommands = Queue()$/;"	kind:variable	line:9
+wsControllerCommands	../src/WebSocketServer.py	/^wsControllerCommands = Queue()$/;"	kind:variable	line:10
+input_handler	../src/WebSocketServer.py	/^async def input_handler(websocket, path):$/;"	kind:function	line:13
+face_handler	../src/WebSocketServer.py	/^async def face_handler(websocket, path):$/;"	kind:function	line:24
+controller_handler	../src/WebSocketServer.py	/^async def controller_handler(websocket, path):$/;"	kind:function	line:35
+WebSocketControllerServer	../src/WebSocketServer.py	/^class WebSocketControllerServer(Process):$/;"	kind:class	line:46
+ready	../src/WebSocketServer.py	/^    ready = Event()$/;"	kind:variable	line:48
+__init__	../src/WebSocketServer.py	/^    def __init__(self, port):$/;"	kind:member	line:50
+run	../src/WebSocketServer.py	/^    def run(self):$/;"	kind:member	line:55
+WebSocketFaceServer	../src/WebSocketServer.py	/^class WebSocketFaceServer(Process):$/;"	kind:class	line:70
+ready	../src/WebSocketServer.py	/^    ready = Event()$/;"	kind:variable	line:72
+__init__	../src/WebSocketServer.py	/^    def __init__(self, port):$/;"	kind:member	line:74
+run	../src/WebSocketServer.py	/^    def run(self):$/;"	kind:member	line:79
+WebSocketInServer	../src/WebSocketServer.py	/^class WebSocketInServer(Process):$/;"	kind:class	line:94
+ready	../src/WebSocketServer.py	/^    ready = Event()$/;"	kind:variable	line:96
+__init__	../src/WebSocketServer.py	/^    def __init__(self, port):$/;"	kind:member	line:98
+run	../src/WebSocketServer.py	/^    def run(self):$/;"	kind:member	line:103
+wsServer	../src/WebSocketServer.py	/^    wsServer = WebSocketInServer(8765)$/;"	kind:variable	line:120

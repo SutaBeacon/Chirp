@@ -50,18 +50,18 @@ class SafeProcess (Process):
     def _checkTimers(self):
         for timer in self._timers:
             if time() >= timer[1]:
-                self._triggerEvent("timer" + str(timer[0]), time())
+                self.triggerEvent("timer" + str(timer[0]), time())
                 self._deleteEvent("timer" + str(timer[0]))
 
     def _checkMessages(self):
         while True:
             try:
                 msg = self._messages.get(False)
-                self._triggerEvent(msg['src'], msg)
+                self.triggerEvent(msg['src'], msg)
             except Empty:
                 break
 
-    def _triggerEvent(self, event, *args):
+    def triggerEvent(self, event, *args):
         if event in self._callbacks:
             for callback in self._callbacks[event]:
                 callback(*args)
@@ -86,7 +86,7 @@ class SafeProcess (Process):
         self.commands.put(msg)
 
     def event(self, event, *args):
-        self._triggerEvent(event, *args)
+        self.triggerEvent(event, *args)
 
     def delay(self, t):
         targetTime = time() + t

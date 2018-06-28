@@ -10,7 +10,7 @@ from WebSocketServer import WebSocketInServer
 from WebSocketServer import WebSocketFaceServer, WebSocketControllerServer
 from WebSocketServer import wsEvents, wsFaceCommands, wsControllerCommands
 from HTTPServer import HTTPServer
-from ConsoleLog import normal, error
+from ConsoleLog import normal, error, notice
 from InteractionController import InteractionController
 from MusicAnalyzer import NoteGrouper, PhraseCutter
 

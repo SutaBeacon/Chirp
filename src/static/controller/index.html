@@ -16,8 +16,8 @@
     <body>
         <script src="materialize/js/materialize.min.js"></script>
         <h3 class="header">Animations</h3>
-        <div class="collection" id="interactions">
-        </div>
+        <div class="collection" id="animations"></div>
+        
 
         <script>
             var wsOut = new WebSocket("ws://127.0.0.1:8000/"),
@@ -34,11 +34,11 @@
                     //console.log(fileNames);
 
                     for (var i=0; i<fileNames.length; i++) {
-                        $("#interactions").append("<a href=\"#!\" class=\"collection-item\" id=\"interaction-" + i + "\" value=\"" + fileNames[i] + "\">#" + i + ": " + fileNames[i] + "</a>")
+                        $("#animations").append("<a href=\"#!\" class=\"collection-item\" id=\"animation-" + i + "\" value=\"" + fileNames[i] + "\">#" + i + ": " + fileNames[i] + "</a>")
 
-                        $("#interaction-" + i).click(function (e) {
+                        $("#animation-" + i).click(function (e) {
                             wsOut.send(JSON.stringify({
-                                cmd: "interaction",
+                                cmd: "animation",
                                 id: $(e.currentTarget).attr('value')
                             }))
                         })

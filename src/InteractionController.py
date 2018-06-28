@@ -1,19 +1,21 @@
 from InteractionControllerBase import InteractionControllerBase
-from ConsoleLog import normal
-from interactions.Sleepy import Sleepy
+from ConsoleLog import normal, notice
+from interactions.InitiateGame import InitiateGame
 
 
 class InteractionController (InteractionControllerBase):
 
     def setup(self):
         self.registerHandler('websocket', self.onWebsocket)
-        # self.interactionQueue.add(Sleepy)
+        self.interactionQueue.add(InitiateGame)
+        # self.setAlarm(1.0, self.test)
 
-    def loop(self):
-        pass
+    def test(self, t):
+        notice("asdfasdfasdf", t)
+        self.setAlarm(1.0, self.test)
 
     def onWebsocket(self, msg):
-        if msg['cmd'] == 'interaction':
+        if msg['cmd'] == 'animation':
             self.send("face", {
                 "cmd": "face-change",
                 "id": msg["id"]
