@@ -4,7 +4,7 @@ from queue import Empty
 from glob import glob
 from os.path import split
 from time import sleep
-import pygame.midi as midi
+import rtmidi
 
 from WebSocketServer import WebSocketInServer
 from WebSocketServer import WebSocketFaceServer, WebSocketControllerServer
@@ -14,8 +14,6 @@ from ConsoleLog import normal, error, notice
 from InteractionController import InteractionController
 from MusicAnalyzer import NoteGrouper, PhraseCutter
 
-
-midi.init()
 
 wsInServer = WebSocketInServer(8000)
 wsFaceServer = WebSocketFaceServer(8001)
@@ -29,8 +27,8 @@ httpServer.start()
 
 interactionController = InteractionController()
 
-midiIn = None
-midiOut = None
+midiIn = rtmidi.RtMidiIn()
+midiOut = rtmidi.RtMidiOut()
 noteGrouper = NoteGrouper()
 phraseCutter = PhraseCutter()
 
@@ -41,15 +39,23 @@ normal("Starting browser window...")
 subprocess.call(["open", httpServer.address.get()])  # open player
 subprocess.call(["open", httpServer.address.get()])  # open controller
 
+foundPiano = False
+for i in range(midiIn.getPortCount()):
+    if "SAMSON Graphite 25" in midiIn.getPortName(i):
+        midiIn.openPort(i)
+        foundPiano = True
+        break
 
-for i in range(midi.get_count()):
-    if "SAMSON Graphite 25 Port1" in str(midi.get_device_info(i)[1]):
-        midiIn = midi.Input(i)
-    if "FluidSynth virtual port" in str(midi.get_device_info(i)[1]):
-        midiOut = midi.Output(i, latency=1)
-if midiIn is None:
+foundSynth = False
+for i in range(midiOut.getPortCount()):
+    if "FluidSynth" in midiOut.getPortName(i):
+        midiOut.openPort(i)
+        foundSynth = False
+        break
+
+if not foundPiano:
     error("CANNOT FIND PIANO!")
-if midiOut is None:
+if not foundSynth:
     error("I CAN'T SING!")
 
 
@@ -68,34 +74,33 @@ def CheckSerialEvents(interactionController):
 
 
 def CheckMIDIEvents(interactionController):
-    if midiIn and midiIn.poll():
-        _data = midiIn.read(1)[0]
-        _time = _data[1]
-        _event = _data[0][0]
-        _note = _data[0][1]
-        _velocity = _data[0][2]
+    if foundPiano:
+        _data = midiIn.getMessage()
+        if _data:
+            # _time = _data[1]
+            _note = _data.getNoteNumber()
+            _velocity = _data.getFloatVelocity()
 
-        if _event == 144:
-            _event = 'note-on'
-        elif _event == 128:
-            _event = 'note-off'
-        elif _event == 208:
-            _event = 'note-hold'
-        else:
-            _event = 'other'
+            if _data.isNoteOn():
+                _event = 'note-on'
+            elif _data.isNoteOff():
+                _event = 'note-off'
+            else:
+                _event = 'other'
 
-        evt = {
-            'src': 'midi',
-            'cmd': _event,
-            'note': _note,
-            'velocity': _velocity,
-            'time': _time
-        }
-        noteGrouper.feed(evt)
-        phraseCutter.feed(evt)
-        interactionController.message(evt)
-    noteGrouper.update(midi.time())
-    phraseCutter.update(midi.time())
+            evt = {
+                'src': 'midi',
+                'cmd': _event,
+                'note': _note,
+                'velocity': _velocity,
+                # 'time': _time
+            }
+            print(evt)
+            # noteGrouper.feed(evt)
+            # phraseCutter.feed(evt)
+            interactionController.message(evt)
+    # noteGrouper.update(midi.time())
+    # phraseCutter.update(midi.time())
     while True:
         try:
             evt = noteGrouper.messages.get(False)
