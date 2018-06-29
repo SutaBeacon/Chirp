@@ -25,4 +25,5 @@ class InteractionController (InteractionControllerBase):
             normal(msg['id'])
 
     def onMidi(self, msg):
-        notice(msg)
+        if msg['cmd'] == 'phrase-end':
+            notice(msg)

@@ -3,7 +3,7 @@ import subprocess
 from queue import Empty
 from glob import glob
 from os.path import split
-from time import sleep
+from time import time, sleep
 import rtmidi
 
 from WebSocketServer import WebSocketInServer
@@ -33,6 +33,7 @@ noteGrouper = NoteGrouper()
 phraseCutter = PhraseCutter()
 
 midiClock = 0
+midiStartTime = time()
 
 
 while not wsInServer.ready.is_set() and not wsFaceServer.ready.is_set() and not wsControllerServer.ready.is_set():
@@ -79,8 +80,8 @@ def CheckMIDIEvents(interactionController):
     global midiClock
     if foundPiano:
         _data = midiIn.getMessage()
+        midiClock = (time() - midiStartTime) * 1000
         if _data:
-            midiClock += _data.getTimeStamp() * 1000
             _note = _data.getNoteNumber()
             _velocity = _data.getFloatVelocity()
 
