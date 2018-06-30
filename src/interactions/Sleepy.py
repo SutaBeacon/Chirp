@@ -1,7 +1,7 @@
 from Interaction import Interaction
 from ConsoleLog import notice
 from data.phrases import snore
-from data.phrases import wakeup
+from data.phrases import question
 
 
 class Sleepy(Interaction):
@@ -19,11 +19,10 @@ class Sleepy(Interaction):
     def onMidi(self, msg):
         notice("midi")
         # notice("Received phrase: {} at {}-{}".format(msg['notes'], msg['start'], msg['end']))
-        self.sing(wakeup)
+        self.sing(question, callback=self.finish)
         self.makeFace('wakeup.json')
         self.servoAngle(135)
-        self.delay(5)
-        self.terminate()
 
     def finish(self, t):
+        notice("quit")
         self.terminate()

@@ -12,6 +12,7 @@ class InteractionController (InteractionControllerBase):
         self.registerHandler('websocket', self.onWebsocket)
         self.registerHandler('midi', self.onMidi)
         self.interactionQueue.add(Sleepy)
+        self.interactionQueue.add(Duet)
         # self.interactionQueue.add(R)
         # self.setAlarm(1.0, self.test)
 

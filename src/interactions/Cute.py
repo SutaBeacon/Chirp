@@ -4,7 +4,7 @@ from data.phrases import snore
 from data.phrases import wakeup
 
 
-class Sleepy(Interaction):
+class Cute(Interaction):
 
     def setup(self):
         self.registerHandler('midi', self.onMidi)
