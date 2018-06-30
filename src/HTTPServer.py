@@ -17,7 +17,10 @@ class HTTPServer(Process):
     def run(self):
         while True:
             try:
-                httpd = socketserver.TCPServer(('', self.PORT), self.handler)
+                httpd = socketserver.TCPServer(('', self.PORT), self.handler, bind_and_activate=False)
+                httpd.allow_reuse_address = True
+                httpd.server_bind()
+                httpd.server_activate()
                 success("HTTP server started at port", self.PORT)
                 try:
                     self.address.put("http://127.0.0.1:" + str(self.PORT) + "/static/face")
@@ -26,7 +29,7 @@ class HTTPServer(Process):
                 except KeyboardInterrupt:
                     httpd.server_close()
                     normal("HTTP server shut down.")
-            except socketserver.socket.error as exc:
+            except OSError as exc:
                 if exc.args[0] != 48:
                     raise
                 error('Port', self.PORT, 'already in use')

@@ -17,6 +17,12 @@
         <script src="materialize/js/materialize.min.js"></script>
         <h3 class="header">Animations</h3>
         <div class="collection" id="animations"></div>
+        <h3 class="header">Interactions</h3>
+        <div class="collection" id="interactions">
+            <a href="#!" class="collection-item" id="interaction-0" value="0">Initiate Game</a>
+            <a href="#!" class="collection-item" id="interaction-1" value="1">Memory Game</a>
+            <a href="#!" class="collection-item" id="interaction-2" value="2">Reaction Game</a>
+        </div>
         
 
         <script>
@@ -48,7 +54,26 @@
             };
 
             $(document).ready(function () {
+                $('#interaction-0').on('click', function(e) {
+                    wsOut.send(JSON.stringify({
+                        cmd: "interaction",
+                        id: 0
+                    }))
+                })
 
+                $('#interaction-1').on('click', function(e) {
+                    wsOut.send(JSON.stringify({
+                        cmd: "interaction",
+                        id: 1
+                    }))
+                })
+
+                $('#interaction-2').on('click', function(e) {
+                    wsOut.send(JSON.stringify({
+                        cmd: "interaction",
+                        id: 2
+                    }))
+                })
 
 
 

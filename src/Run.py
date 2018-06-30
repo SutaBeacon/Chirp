@@ -5,6 +5,7 @@ from glob import glob
 from os.path import split
 from time import time, sleep
 import rtmidi
+import socket
 
 from WebSocketServer import WebSocketInServer
 from WebSocketServer import WebSocketFaceServer, WebSocketControllerServer
@@ -18,7 +19,7 @@ from MusicAnalyzer import NoteGrouper, PhraseCutter
 wsInServer = WebSocketInServer(8000)
 wsFaceServer = WebSocketFaceServer(8001)
 wsControllerServer = WebSocketControllerServer(8002)
-httpServer = HTTPServer(8003)
+httpServer = HTTPServer(8004)
 
 wsInServer.start()
 wsFaceServer.start()
@@ -38,9 +39,8 @@ midiStartTime = time()
 
 while not wsInServer.ready.is_set() and not wsFaceServer.ready.is_set() and not wsControllerServer.ready.is_set():
     pass
-normal("Starting browser window...")
-subprocess.call(["open", httpServer.address.get()])  # open player
-subprocess.call(["open", httpServer.address.get()])  # open controller
+# normal("Starting browser window...")
+# subprocess.call(["firefox", httpServer.address.get(), httpServer.address.get()])  # open player and controller
 
 foundPiano = False
 for i in range(midiIn.getPortCount()):
@@ -144,6 +144,12 @@ def DispatchCommands(interactionController):
                 for note in cmd['notes']:
                     note[1] += t
                 midiOut.write(cmd['notes'])
+        elif cmd['dest'] == 'serial':
+            return
+            if cmd['cmd'] == 'led':
+                midiOut.set_instrument(cmd['id'])
+            elif cmd['cmd'] == 'note':
+                midiOut.note_on(cmd['note'], velocity=cmd['velocity'])
 
     while True:
         try:

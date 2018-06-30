@@ -51,3 +51,30 @@ class Interaction(SafeProcess):
             def _cb(t):
                 self.triggerEvent(after)
             self.setAlarm(tmax / 1000, _cb)
+
+    def blinkOniLED(oni, id):
+        pass
+
+    def stopOniLEDBlink(oni, id):
+        pass
+
+    def setOniLED(oni, ind, num):
+        self.send("serial", {
+            'cmd': 'led',
+            'id': oni,
+            'num': ind * 4 + oni * 151 + num
+        })
+
+    def makeOniNote(oni, id, note):
+        self.send("serial", {
+            'cmd': 'note',
+            'id': oni,
+            'num': oni * 151 + 12 + note
+        })
+
+    def oniShowPoints(oni, score):
+        for i in range(3):
+            if i > score:
+                self.setOniLED(oni, i, 0)
+            else:
+                self.setOniLED(oni, i, 2)

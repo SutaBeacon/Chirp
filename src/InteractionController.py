@@ -8,7 +8,8 @@ class InteractionController (InteractionControllerBase):
     def setup(self):
         self.registerHandler('websocket', self.onWebsocket)
         self.registerHandler('midi', self.onMidi)
-        self.interactionQueue.add(InitiateGame)
+        # self.interactionQueue.add(InitiateGame)
+        # self.interactionQueue.add(R)
         # self.setAlarm(1.0, self.test)
 
     def test(self, t):
@@ -23,6 +24,17 @@ class InteractionController (InteractionControllerBase):
             })
         elif msg['cmd'] == 'face-finished':
             normal(msg['id'])
+        elif msg['cmd'] == 'interaction':
+            if msg['id'] == 0:
+                notice("intiate game")
+                self.interactionQueue.clear()
+                self.interactionQueue.add(InitiateGame)
+            # elif msg['id'] == 1:
+            #     self.interactionQueue.clear()
+            #     self.interactionQueue.add(ReactionGame)
+            # elif msg['id'] == 2:
+            #     self.interactionQueue.clear()
+            #     self.interactionQueue.add(MemoryGame)
 
     def onMidi(self, msg):
         if msg['cmd'] == 'phrase-end':
