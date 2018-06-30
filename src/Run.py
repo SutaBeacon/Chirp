@@ -77,7 +77,6 @@ def CheckSerialEvents(interactionController):
 
 
 def CheckMIDIEvents(interactionController):
-    global midiClock
     if foundPiano:
         _data = midiIn.getMessage()
         midiClock = (time() - midiStartTime) * 1000
