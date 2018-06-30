@@ -70,6 +70,6 @@ class Interaction(SafeProcess):
                 self.setOniLED(oni, i, 2)
 
     def servoAngle(self, angle):
-        self.send("serial" {
+        self.send("serial", {
             'data': angle
         })
