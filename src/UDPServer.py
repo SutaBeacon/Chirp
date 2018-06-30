@@ -14,7 +14,7 @@ class IncomingUDP (Thread):
         super(IncomingUDP, self).__init__(target=self._mainloop)
         self.serverSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.serverSocket.bind(('0.0.0.0', 8767))
+        self.serverSocket.bind(('0.0.0.0', 8766))
         self.queue = queue
     
     def _mainloop(self):

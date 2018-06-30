@@ -21,7 +21,7 @@ from SerialServer import SerialServer
 wsInServer = WebSocketInServer(8000)
 wsFaceServer = WebSocketFaceServer(8001)
 wsControllerServer = WebSocketControllerServer(8002)
-httpServer = HTTPServer(8004)
+httpServer = HTTPServer(8003)
 udpServer = UDPServer()
 serialServer = SerialServer()
 
