@@ -11,15 +11,19 @@ class Sleepy(Interaction):
         self.setInstrument(73)
         self.makeFace('sleepy.json')
         self.servoAngle(120)
-
-    def loop(self):
         self.sing(snore)
 
+    def loop(self):
+        pass
+
     def onMidi(self, msg):
+        notice("midi")
         # notice("Received phrase: {} at {}-{}".format(msg['notes'], msg['start'], msg['end']))
-        self.sing(wakeup, self.finish)
+        self.sing(wakeup)
         self.makeFace('wakeup.json')
         self.servoAngle(135)
+        self.delay(5)
+        self.terminate()
 
     def finish(self, t):
         self.terminate()

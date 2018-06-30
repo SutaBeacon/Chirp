@@ -13,6 +13,11 @@ class InteractionController (InteractionControllerBase):
         # self.interactionQueue.add(R)
         # self.setAlarm(1.0, self.test)
 
+    def loop(self):
+        if self.interactionQueue.isEmpty():
+            self.interactionQueue.add(Sleepy)
+
+
     def test(self, t):
         notice("asdfasdfasdf", t)
         self.setAlarm(1.0, self.test)
