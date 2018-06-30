@@ -1,6 +1,7 @@
 from InteractionControllerBase import InteractionControllerBase
 from ConsoleLog import normal, notice
 from interactions.InitiateGame import InitiateGame
+from interactions.Sleepy import Sleepy
 
 
 class InteractionController (InteractionControllerBase):
@@ -28,7 +29,7 @@ class InteractionController (InteractionControllerBase):
             if msg['id'] == 0:
                 notice("intiate game")
                 self.interactionQueue.clear()
-                self.interactionQueue.add(InitiateGame)
+                self.interactionQueue.add(Sleepy)
             # elif msg['id'] == 1:
             #     self.interactionQueue.clear()
             #     self.interactionQueue.add(ReactionGame)
