@@ -132,6 +132,7 @@ wsIn.onmessage = function (event) {
 		var ids = []
 		for (var i = 0; i < fileNames.length; i++){
 			$.ajaxSettings.async = false;
+			console.log("../animations/" + fileNames[i]);
 			$.getJSON("../animations/" + fileNames[i], function(data) {
 
 				data.layers.map(function (layer, indl) {

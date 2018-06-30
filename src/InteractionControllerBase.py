@@ -50,7 +50,7 @@ class InteractionControllerBase ():
         self.setup()
 
     def message(self, msg):
-        if msg['src'] in self._handlers:
+        if 'src' in msg and msg['src'] in self._handlers:
             for handler in self._handlers[msg['src']]:
                 handler(msg)
         self.interactionQueue.notify(msg)

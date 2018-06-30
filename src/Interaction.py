@@ -51,3 +51,20 @@ class Interaction(SafeProcess):
             def _cb(t):
                 self.triggerEvent(after)
             self.setAlarm(tmax / 1000, _cb)
+
+    def setOniLED(self, oni, ind, num):
+        self.send("serial", {
+            'data': ind * 4 + oni * 151 + num
+        })
+
+    def makeOniNote(self, oni, id, note):
+        self.send("serial", {
+            'data': oni * 151 + 12 + note
+        })
+
+    def oniShowPoints(self, oni, score):
+        for i in range(3):
+            if i > score:
+                self.setOniLED(oni, i, 0)
+            else:
+                self.setOniLED(oni, i, 2)
