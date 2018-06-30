@@ -17,8 +17,8 @@ class IncomingSerial (Thread):
     def _mainloop(self):
         while not self.terminate.is_set():
             ch = self.port.read()
-            normal("got:", ch.decode('utf-8'))
-            self.queue.put(ch.decode('utf-8'))
+            # normal("got:", ch.decode('utf-8'))
+           #  self.queue.put(ch.decode('utf-8'))
 
 
 class SerialServer (Process):
@@ -37,7 +37,9 @@ class SerialServer (Process):
         else:
             ports = comports()
             for port in ports:
-                if port.usb_description() and "Arduino" in port.usb_description():
+                print(port.usb_description())
+            for port in ports:
+                if port.usb_description() and "Atlas Edge" in port.usb_description():
                     try:
                         self.port = serial.Serial(port.device, 9600)
                         self.incoming = IncomingSerial(self.port, self.messages)
@@ -56,7 +58,7 @@ class SerialServer (Process):
             try:
                 ch = self.commands.get()
                 normal("command:", ch)
-                self.port.write(ch.encode('utf-8'))
+                self.port.write(ch)
             except KeyboardInterrupt:
                 if self.port:
                     normal("Close serial port.")
@@ -75,7 +77,8 @@ if __name__ == '__main__':
     ss.start()
     try:
         while True:
-            ch = input("Input command: ")
+            ch = int(input("Input command: "))
+            ch = bytes.fromhex('{0:02x}'.format(ch))
             ss.commands.put(ch)
     except KeyboardInterrupt:
         pass

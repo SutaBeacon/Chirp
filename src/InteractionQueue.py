@@ -80,11 +80,7 @@ class InteractionQueue:
             self._current.terminate()
             self._current.join()
             self._current = None
-            while True:
-                try:
-                    self._interactions.get(False)
-                except Empty:
-                    break
+            self._interactions = []
         self.running.clear()
 
     def isEmpty(self):

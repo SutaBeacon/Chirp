@@ -14,17 +14,22 @@ from HTTPServer import HTTPServer
 from ConsoleLog import normal, error, notice
 from InteractionController import InteractionController
 from MusicAnalyzer import NoteGrouper, PhraseCutter
+from UDPServer import UDPServer
+from SerialServer import SerialServer
 
 
 wsInServer = WebSocketInServer(8000)
 wsFaceServer = WebSocketFaceServer(8001)
 wsControllerServer = WebSocketControllerServer(8002)
 httpServer = HTTPServer(8004)
+udpServer = UDPServer()
+serialServer = SerialServer()
 
 wsInServer.start()
 wsFaceServer.start()
 wsControllerServer.start()
 httpServer.start()
+udpServer.start()
 
 interactionController = InteractionController()
 
@@ -41,7 +46,7 @@ while not wsInServer.ready.is_set() and not wsFaceServer.ready.is_set() and not 
     pass
 # normal("Starting browser window...")
 # subprocess.call(["firefox", httpServer.address.get(), httpServer.address.get()])  # open player and controller
-
+"""
 foundPiano = False
 for i in range(midiIn.getPortCount()):
     if "SAMSON Graphite 25" in midiIn.getPortName(i):
@@ -60,7 +65,7 @@ if not foundPiano:
     error("CANNOT FIND PIANO!")
 if not foundSynth:
     error("I CAN'T SING!")
-
+"""
 
 def CheckWebsocketEvents(interactionController):
     try:
@@ -77,33 +82,21 @@ def CheckSerialEvents(interactionController):
 
 
 def CheckMIDIEvents(interactionController):
-    global midiClock
-    if foundPiano:
-        _data = midiIn.getMessage()
-        midiClock = (time() - midiStartTime) * 1000
-        if _data:
-            _note = _data.getNoteNumber()
-            _velocity = _data.getFloatVelocity()
-
-            if _data.isNoteOn():
-                _event = 'note-on'
-            elif _data.isNoteOff():
-                _event = 'note-off'
+    while True:
+        try:
+            evt = udpServer.messages.get(False)
+            if evt['cmd'] != 'time':
+                interactionController.message(evt)
+                noteGrouper.feed(evt)
+                phraseCutter.feed(evt)
+                interactionController.message(evt)
             else:
-                _event = 'other'
-
-            evt = {
-                'src': 'midi',
-                'cmd': _event,
-                'note': _note,
-                'velocity': _velocity,
-                'time': midiClock
-            }
-            noteGrouper.feed(evt)
-            phraseCutter.feed(evt)
-            interactionController.message(evt)
-    noteGrouper.update(midiClock)
-    phraseCutter.update(midiClock)
+                noteGrouper.update(evt['time'])
+                phraseCutter.update(evt['time'])
+        except Empty:
+            break
+        
+    
     while True:
         try:
             evt = noteGrouper.messages.get(False)
@@ -132,24 +125,10 @@ def DispatchCommands(interactionController):
         elif cmd['dest'] == 'controller':
             wsControllerCommands.put(json.dumps(cmd))
         elif cmd['dest'] == 'midi' and midiOut:
-            return
-            if cmd['cmd'] == 'instrument':
-                midiOut.set_instrument(cmd['id'])
-            elif cmd['cmd'] == 'note-on':
-                midiOut.note_on(cmd['note'], velocity=cmd['velocity'])
-            elif cmd['cmd'] == 'note-off':
-                midiOut.note_off(cmd['note'])
-            elif cmd['cmd'] == 'write':
-                t = 0 # midi.time()
-                for note in cmd['notes']:
-                    note[1] += t
-                midiOut.write(cmd['notes'])
+            udpServer.commands.put(cmd)
         elif cmd['dest'] == 'serial':
-            return
-            if cmd['cmd'] == 'led':
-                midiOut.set_instrument(cmd['id'])
-            elif cmd['cmd'] == 'note':
-                midiOut.note_on(cmd['note'], velocity=cmd['velocity'])
+            c = bytes.fromhex('{0:02x}'.format(cmd['data']))
+            serialServer.commands.put(c)
 
     while True:
         try:

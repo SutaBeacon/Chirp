@@ -9,6 +9,7 @@ class InitiateGame (Interaction):
         self.message = None
 
         print("startgame")
+        self.setOniLED(0, 1, 1)
         self.makeFace("startgame.json")
         self.sing(question, callback=self.findFace)     # Start Gane Sound
 
