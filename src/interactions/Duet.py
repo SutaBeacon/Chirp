@@ -31,13 +31,17 @@ class Duet(Interaction):
                 n.append(self.phrase[i]['note'])
                 n.append(127)
                 final.append([n, self.phrase[i]['time']])
-                n[0] = 0x80
-                if i < len(self.phrase)-1:
-                    final.append([n, self.phrase[i + 1]['time']])
-                else:
-                    final.append([n, self.phrase[i]['time'] + 1000])
-            self.sing(final)
+                n = []
+                n.append(0x80)
+                n.append(self.phrase[i]['note'])
+                n.append(127)
+                final.append([n, self.phrase[i]['time'] + 500])
+                
+            self.sing(final, callback=self.face)
             self.phrase = []
+
+    def face(self, t):
+        self.makeFace('happy_open.json')
 
             
 

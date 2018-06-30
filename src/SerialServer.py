@@ -67,10 +67,6 @@ class SerialServer (Process):
                     self.incoming.join()
                 break
 
-    def message(self, msg):
-        pass
-        # if msg['cmd'] == ''
-
 
 if __name__ == '__main__':
     ss = SerialServer()

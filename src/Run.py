@@ -30,6 +30,7 @@ wsFaceServer.start()
 wsControllerServer.start()
 httpServer.start()
 udpServer.start()
+serialServer.start()
 
 interactionController = InteractionController()
 
@@ -162,10 +163,6 @@ try:
         interactionController.mainloop()
 
 except KeyboardInterrupt:
-    if foundPiano:
-        midiIn.closePort()
-    if foundSynth:
-        midiOut.closePort()
     wsInServer.join()
     wsFaceServer.join()
     wsControllerServer.join()
