@@ -82,19 +82,6 @@ def CheckSerialEvents(interactionController):
 
 
 def CheckMIDIEvents(interactionController):
-<<<<<<< HEAD
-    if foundPiano:
-        _data = midiIn.getMessage()
-        midiClock = (time() - midiStartTime) * 1000
-        if _data:
-            _note = _data.getNoteNumber()
-            _velocity = _data.getFloatVelocity()
-
-            if _data.isNoteOn():
-                _event = 'note-on'
-            elif _data.isNoteOff():
-                _event = 'note-off'
-=======
     while True:
         try:
             evt = udpServer.messages.get(False)
@@ -103,7 +90,6 @@ def CheckMIDIEvents(interactionController):
                 noteGrouper.feed(evt)
                 phraseCutter.feed(evt)
                 interactionController.message(evt)
->>>>>>> 122a71acd4bece8c1df9048b2c564db628d20d56
             else:
                 noteGrouper.update(evt['time'])
                 phraseCutter.update(evt['time'])
