@@ -57,7 +57,6 @@ class SerialServer (Process):
         while True:
             try:
                 ch = self.commands.get()
-                normal("command:", ch)
                 self.port.write(ch)
             except KeyboardInterrupt:
                 if self.port:

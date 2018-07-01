@@ -129,7 +129,6 @@ def DispatchCommands(interactionController):
             udpServer.commands.put(cmd)
         elif cmd['dest'] == 'serial':
             c = bytes.fromhex('{0:02x}'.format(cmd['data']))
-            normal(c)
             serialServer.commands.put(c)
 
     while True:
