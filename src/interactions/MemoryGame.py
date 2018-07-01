@@ -7,6 +7,8 @@ from ConsoleLog import notice
 
 class MemoryGame (Interaction):
 
+    errorRate = 0.3
+
     notes = [0, 0, 0]
 
     state = "init"
@@ -72,7 +74,7 @@ class MemoryGame (Interaction):
                     self.delay(1)
                     self.makeFace('serious-2.json')
                     self.setAlarm(5, self.hint)
-                    self.state = 'turn'
+                    self.state = 'playing'
                     self.delay(1.5)
 
                     self.currentPhrase = self.generatePhrase(self.notes, 5)
@@ -83,33 +85,116 @@ class MemoryGame (Interaction):
 
             elif self.state == 'turn':
                 if msg['note'] == self.currentPhrase[self.inputCounter]:
+                    # player correctly inputs a note
                     self.inputCounter += 1
                     if self.noteCount == self.inputCounter:
+                        # player gets a point
                         self.inputCounter = 0
                         self.playerScore += 1
                         if self.playerScore == 2:
+                            # player wins!
                             self.win('player')
                             return
                         self.oniShowPoints(self.playerScore, self.chirpScore)
+                        # chirp is not happy about this
                         self.delay(0.3)
                         self.makeFace('pityful.json')
                         self.delay(0.5)
                         self.makeFace('serious-1.json')
+                        # chirp's turn
+                        self.delay(1)
 
+                        mistake = False
+                        for note in self.currentPhrase:
+                            if random.random() < self.errorRate:
+                                # chirp "decides" to make a mistake
+                                self.makeFace('laugh.json')
+                                n = random.choice(self.notes)
+                                while n == note:
+                                    n = random.choice(self.notes)
+                                self.makeNote(n, 600, callback=self.serious)
+                                self.delay(1)
+                                # The mistake is made
+                                mistake = True 
+                                break
+                            else:
+                                self.makeFace('laugh.json')
+                                self.makeNote(note, 600, callback=self.serious)
+                                self.delay(1)
+                        
+                        if mistake:
+                            # a mistake was made!
+                            self.oniFail()
+                            self.makeFace('pityful.json')
+                            self.delay(0.5)
+                            self.makeFace('nono.json')
+                            self.delay(1.5)
+                            self.makeFace('serious-1.json')
+                        else:
+                            self.oniSuccess()
+                            self.makeFace('laugh.json')
+                            self.delay(1.5)
+                            self.chirpScore += 1
+                            if self.chirpScore == 2:
+                                # chirp wins!
+                                self.win('chirp')
+                                return
+                                
+                else:
+                    # player fails
+                    self.oniFail()
+                    self.makeFace('laugh.json')
+                    self.delay(1.5)
+
+                        
+    def singSequence(seq):
+        for note in seq:
+            self.makeFace('laugh.json')
+            self.makeNote(note, 600, callback=self.serious)
+            
+    def oniFail(self):
+        self.oniMakeNote(50)
+        self.oniSetAllLED(1)
+        self.delay(0.2)
+        self.oniSetAllLED(0)
+        self.delay(0.2)
+        self.oniSetAllLED(1)
+        self.delay(0.2)
+        self.oniSetAllLED(0)
+        self.delay(0.2)
+
+    def oniSuccess(self):
+        self.oniMakeNote(60)
+        self.oniSetAllLED(1)
+        self.delay(0.2)
+        self.oniSetAllLED(0)
+        self.delay(0.2)
+        self.oniSetAllLED(1)
+        self.delay(0.2)
+        self.oniMakeNote(67)
+        self.oniSetAllLED(0)
+        self.delay(0.2)
 
     def win(self, who):
         if who == 'player':
+            self.(140)
             self.makeFace('grumpy.json')
+            self.delay(0.8)
+            self.servoAngle(150)
+            self.delay(1)
             pass
         elif who == 'chirp':
             self.makeFace('laugh.json')
-            self.delay(0.5)
+            self.delay(0.7)
             self.makeFace('startgame.json')
             self.delay(0.5)
             self.makeFace('laugh.json')
+        self.terminate()
 
     def hint(self):
         self.makeFace('hint.json')
 
+    def serious(self):
+        self.faceFace('serious-1.json')
+
                 
-        
