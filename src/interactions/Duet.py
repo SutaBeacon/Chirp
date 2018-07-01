@@ -11,6 +11,7 @@ class Duet(Interaction):
     def setup(self):
         self.registerHandler('midi', self.onMidi)
         self.setInstrument(73)
+        self.servoAngle(140)
         self.makeFace('happy_open.json')
         self.sing(question)
         self.delay(4)
@@ -23,7 +24,9 @@ class Duet(Interaction):
         if msg['cmd'] == 'note-on':
             self.phrase.append(msg)
         if msg['cmd'] == 'phrase-end':
+            
             self.makeFace('laugh.json')
+            self.servoAngle(150)
             startTime = self.phrase[0]['time']
             notes = [note['note'] for note in self.phrase]
             final = []
@@ -42,10 +45,14 @@ class Duet(Interaction):
                 final.append([n, self.phrase[i]['time'] + 500])
                 
             self.sing(final, callback=self.face)
+
             self.phrase = []
 
     def face(self, t):
         self.makeFace('happy_open.json')
+        self.servoAngle(140)
+
+
 
             
 

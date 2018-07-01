@@ -2,7 +2,7 @@ from InteractionControllerBase import InteractionControllerBase
 from ConsoleLog import normal, notice
 from interactions.InitiateGame import InitiateGame
 from interactions.Sleepy import Sleepy
-from interactions.Cute import Cute
+from interactions.MemoryGame import MemoryGame
 from interactions.Duet import Duet
 
 
@@ -35,10 +35,10 @@ class InteractionController (InteractionControllerBase):
                 self.interactionQueue.add(Sleepy)
             elif msg['id'] == 1:
                 self.interactionQueue.clear()
-                self.interactionQueue.add(Cute)
+                self.interactionQueue.add(Duet)
             elif msg['id'] == 2:
                 self.interactionQueue.clear()
-                self.interactionQueue.add(Duet)
+                self.interactionQueue.add(MemoryGame)
 
     def onMidi(self, msg):
         if msg['cmd'] == 'phrase-end':
