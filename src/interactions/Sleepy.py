@@ -10,7 +10,18 @@ class Sleepy(Interaction):
         self.registerHandler('midi', self.onMidi)
         self.setInstrument(73)
         self.makeFace('sleepy.json')
-        self.servoAngle(120)
+        for i in range(10):
+            self.servoAngle(150-i)
+            self.delay(0.06)
+        self.delay(0.5)
+        for i in range(10):
+            self.servoAngle(140-i)
+            self.delay(0.06)
+        self.delay(0.5)
+        for i in range(10):
+            self.servoAngle(130-i)
+            self.delay(0.06)
+
         self.sing(snore)
 
     def loop(self):
