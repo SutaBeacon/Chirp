@@ -13,6 +13,10 @@ class Duet(Interaction):
         self.setInstrument(73)
         self.makeFace('happy_open.json')
         self.sing(question)
+        self.delay(4)
+        self.sing(question)
+        self.delay(2)
+        self.sing(question)
 
     def onMidi(self, msg):
         # notice("Received phrase: {} at {}-{}".format(msg['notes'], msg['start'], msg['end']))

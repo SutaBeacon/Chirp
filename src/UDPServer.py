@@ -41,7 +41,7 @@ class UDPServer (Process):
             try:
                 cmd = self.commands.get()
                 print(cmd)
-                self.clientSocket.sendto(json.dumps(cmd).encode('utf-8'), ('192.168.124.10', 8765)) # production: 7
+                self.clientSocket.sendto(json.dumps(cmd).encode('utf-8'), ('192.168.1.102', 8765))
             except KeyboardInterrupt:
                 break
 

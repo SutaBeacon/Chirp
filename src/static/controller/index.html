@@ -20,14 +20,14 @@
         <h3 class="header">Interactions</h3>
         <div class="collection" id="interactions">
             <a href="#!" class="collection-item" id="interaction-0" value="0">Sleepy</a>
-            <a href="#!" class="collection-item" id="interaction-1" value="1">Cute</a>
-            <a href="#!" class="collection-item" id="interaction-2" value="2">Duet</a>
+            <a href="#!" class="collection-item" id="interaction-1" value="1">Duet</a>
+            <a href="#!" class="collection-item" id="interaction-2" value="2">Memory Game</a>
         </div>
         
 
         <script>
-            var wsOut = new WebSocket("ws://192.168.124.4:8000/"),
-                wsIn = new WebSocket("ws://192.168.124.4:8002/");
+            var wsOut = new WebSocket("ws://192.168.1.100:8000/"),
+                wsIn = new WebSocket("ws://192.168.1.100:8002/");
             wsIn.onmessage = function (event) {
                 var message = JSON.parse(event.data);
             	// console.log(message);
