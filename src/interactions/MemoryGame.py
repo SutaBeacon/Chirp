@@ -33,11 +33,10 @@ class MemoryGame (Interaction):
 
     def setup(self):
         self.makeFace("happy_open.json")
-        self.registerHandler('serial', self.onSerial)
         self.registerHandler('midi', self.onMidi)
         self.state = "config-1"
-        self.delay(3)
         self.oniSetLED(0, 1)
+        self.delay(3)
 
     def onMidi(self, msg):
         if msg['cmd'] == 'note-on':
@@ -46,8 +45,8 @@ class MemoryGame (Interaction):
                 if msg['note'] in self.notes:
                     self.makeFace("nono.json")
                 else:
-                    self.setOniLED(0, 2)
-                    self.setOniLED(1, 1)
+                    self.oniSetLED(0, 2)
+                    self.oniSetLED(1, 1)
                     self.makeFace("hint.json")
                     self.state = 'config-2'
                     self.notes[0] = msg['note']
@@ -56,8 +55,8 @@ class MemoryGame (Interaction):
                 if msg['note'] in self.notes:
                     self.makeFace("serious-1.json")
                 else:
-                    self.setOniLED(1, 2)
-                    self.setOniLED(2, 1)
+                    self.oniSetLED(1, 2)
+                    self.oniSetLED(2, 1)
                     self.makeFace("hint.json")
                     self.state = 'config-3'
                     self.notes[1] = msg['note']
@@ -66,7 +65,7 @@ class MemoryGame (Interaction):
                 if msg['note'] in self.notes:
                     self.makeFace("nono.json")
                 else:
-                    self.setOniLED(2, 2)
+                    self.oniSetLED(2, 2)
                     self.makeFace("hint.json")
                     self.delay(0.3)
                     self.notes[2] = msg['note']
@@ -83,7 +82,7 @@ class MemoryGame (Interaction):
                         self.oniMakeNote(note)
                         self.delay(1)
 
-            elif self.state == 'turn':
+            elif self.state == 'playing':
                 if msg['note'] == self.currentPhrase[self.inputCounter]:
                     # player correctly inputs a note
                     self.inputCounter += 1
@@ -139,6 +138,7 @@ class MemoryGame (Interaction):
                                 # chirp wins!
                                 self.win('chirp')
                                 return
+                    self.oniShowPoints(self.playerScore, self.chirpScore)
                                 
                 else:
                     # player fails
@@ -147,7 +147,7 @@ class MemoryGame (Interaction):
                     self.delay(1.5)
 
                         
-    def singSequence(seq):
+    def singSequence(self, seq):
         for note in seq:
             self.makeFace('laugh.json')
             self.makeNote(note, 600, callback=self.serious)
@@ -177,7 +177,7 @@ class MemoryGame (Interaction):
 
     def win(self, who):
         if who == 'player':
-            self.(140)
+            self.servoAngle(140)
             self.makeFace('grumpy.json')
             self.delay(0.8)
             self.servoAngle(150)
