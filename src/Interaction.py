@@ -16,6 +16,19 @@ class Interaction(SafeProcess):
             "id": instrument
         })
 
+    def noteDelay(self, note, length):
+        self.send("midi", {
+            "cmd": "note-on",
+            "note": note,
+            "velocity": 127
+        })
+        self.delay(length)
+        self.send("midi", {
+            "cmd": "note-off",
+            "note": note
+        })
+
+
     def makeNote(self, note, length, velocity=127, callback=None, after=None):
         def cb(t):
             self.send("midi", {
